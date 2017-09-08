@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GameObjectList extends ArrayList<GameObject>{
-	
+
 	/**
 	 * Returns true if the list contains the GameObject specified by name
 	 * @param name of the object to be searched

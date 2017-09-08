@@ -10,6 +10,7 @@ import system.GameObjectList;
  */
 public class Tile {
 	
+	char symbol = '-';
 	GameObjectList gameObjects;
 	TileCover cover;
 	Point coordinates;
@@ -41,6 +42,11 @@ public class Tile {
 	
 	public boolean isExcavated() {
 		return excavated == true && cover == null;
+	}
+	
+	public char getSymbol() {
+		if(isExcavated()) return symbol;
+		return cover.symbol;
 	}
 	
 

@@ -1,34 +1,44 @@
 package environment;
 
+import java.awt.Point;
 
 /**
  * A class that represents the randomly generated game play area
- * Which is a 10 (y axis) by 15 (x axis) field of game squares to be populated for game space
+ * The size of the GameMap is determined by the user in the constructor.
  * @author Alex White 
  *
  */
 public class GameMap {
 	
-	int mapX = 15;
-	int mapY = 10;
-	int defaultCellLength = 10;
+	int mapX;
+	int mapY;
+	int defaultCellLength = 10; //the number of characters the cells in the GameMap will be printed out with in the console
 	char horizontalLineChar = '-';
-	char unexcavatedTile = 'X';
-	Tile gameMap[][] = new Tile[mapX][mapY];
+	Tile gameMap[][];
+	
+
+	public GameMap(int x, int y) {
+		mapX = x;
+		mapY = y;
+		gameMap = new Tile[mapX][mapY];
+	}
+	
+	public void assignTile(Tile toAssign) {
+		gameMap[toAssign.coordinates.x][toAssign.coordinates.y] = toAssign;
+	}
 	
 	/**
-	 * A method which prints out the gameMap showing all of the Tiles and the first GameObject they contain.
+	 * A method which prints the GameMap to the console showing all of the Tiles and their representative symbol
 	 * @param toPrint
 	 */
+	//TODO
 	public void printMap() {
-		String unexcavated = cellFit(unexcavatedTile + "");
-		for(int i = 0; i < (mapY * 2)+1; i++) {
+		for(int j = 0; j < (mapY * 2)+1; j++) {
 			System.out.print('|');
 			
-			for(int j = 0; j < mapX; j++) {
-				if(i % 2 != 0) {
-//					if(gameMap[j][i].excavated == false) System.out.print(unexcavated);
-					System.out.print(unexcavated);
+			for(int i = 0; i < mapX; i++) {
+				if(j % 2 != 0) {
+					System.out.print(cellFit(gameMap[i][j].getSymbol() + ""));
 				}
 				else {
 					printGridLine(defaultCellLength);
@@ -39,6 +49,23 @@ public class GameMap {
 		}
 	}
 	
+	/**
+	 * Print the map to the console without any of the formatting and lines.
+	 */
+	public void basicPrintMap() {
+		for(int j = 0; j < mapY; j++) {
+			
+			for(int i = 0; i < mapX; i++) {
+				System.out.print(gameMap[i][j].getSymbol());
+			}
+			System.out.println();
+		}
+	}
+	
+	/**
+	 * A method to recursively create lines for the GameMap grid in the console output
+	 * @param num the length of the grid line desired
+	 */
 	public void printGridLine(int num) {
 		if(num > 0) {
 			System.out.print(horizontalLineChar);
@@ -46,8 +73,12 @@ public class GameMap {
 		}
 	}
 	
-	
-	public String addSpaceOther(int num) {
+	/**
+	 * A method to add space to a string that will go in a tile of the GameMap grid in the console output
+	 * @param num the number of spaces of which to add
+	 * @return the string with spaces added
+	 */
+	public String addSpace(int num) {
 		String space = "";
 		for(int i = 0; i < num; i++) {
 			space += ' ';
@@ -55,9 +86,14 @@ public class GameMap {
 		return space;
 	}
 	
+	/**
+	 * A method to fit Strings shorter than the cell length to the map output
+	 * @param toFit the string with which to fit
+	 * @return
+	 */
 	public String cellFit(String toFit) {
 		int spaceToAdd = defaultCellLength - toFit.length();
-		return toFit + addSpaceOther(spaceToAdd);
+		return toFit + addSpace(spaceToAdd);
 	}
 	
 }
