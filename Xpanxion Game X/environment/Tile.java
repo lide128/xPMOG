@@ -1,10 +1,7 @@
 package environment;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.awt.Point;
-import system.GameObject;
-import system.GameElement;
+import system.GameObjectList;
 
 /**
  * A class representing a square element of space that can be occupied with 0..n elements or objects
@@ -13,7 +10,7 @@ import system.GameElement;
  */
 public class Tile {
 	
-	List<GameObject> gameObjects;
+	GameObjectList gameObjects;
 	TileCover cover;
 	Point coordinates;
 	int value;
@@ -23,8 +20,8 @@ public class Tile {
 	
 	public Tile(Point assignedCoords) {
 		
+		gameObjects = new GameObjectList();
 		coordinates = assignedCoords;
-		gameObjects = new ArrayList<GameObject>();
 		cover = new TileCover();
 		playerOccupied = false;
 		excavated = false;
@@ -32,48 +29,18 @@ public class Tile {
 		
 	}
 	
-	public boolean isPlayerPresent() {
-		return playerOccupied;
-	}
-	
-	public int totalElementObjectCount() {
-		return gameObjects.size();
-	}
-	
 	/**
-	 * Add a GameObject to the tile's element list
-	 * @param toAdd the GameObject to be added
+	 * Removes the cover of the tile, flips excavated to true, makes the reference to the Tile Cover null
+	 * @return the list of GameObjects contained in the Tile Cover
 	 */
-	public void addObjectToTile(GameObject toAdd) {
-		gameObjects.add(toAdd);
+	public GameObjectList removeCover() {
+		excavated = true;
+		cover = null;
+		return cover.gameObjects;
 	}
 	
-	
-	/**
-	 * Finds and returns a copy of the GameElement in the element list of the tile
-	 * @param toFindName the name of GameElement to find
-	 * @returns the GameElement if found, if not returns null
-	 */
-	public GameObject findElement(String toFindName) {
-		GameObject toFind = null;
-		for(GameObject object: gameObjects) {
-			if(object.name.equals(toFindName)) toFind = object;
-		}
-		return toFind;
-	}
-	
-	
-	/**
-	 * Remove a GameElement from the tile's element list
-	 * @param toRemoveName the name of the element to remove
-	 * @returns true if removal was successful, false otherwise
-	 */
-	public boolean removeElementFromTile(String toRemoveName) {
-		GameObject toRemove = findElement(toRemoveName);
-		if(toRemove != null) {
-			return gameObjects.remove(toRemove);
-		}
-		return false;
+	public boolean isExcavated() {
+		return excavated == true && cover == null;
 	}
 	
 
