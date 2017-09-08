@@ -1,7 +1,6 @@
 package system;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class GameObjectList extends ArrayList<GameObject>{
 

@@ -14,13 +14,9 @@ public class GenerateMap {
 		GameMap test = new GameMap(15, 10);
 		populateMap(test);
 		test.basicPrintMap();
-		test.printMap();
-
+		test.printMap(5);
 	}
 	
-	/**
-	 * 
-	 */
 	public GenerateMap() {
 		
 	}

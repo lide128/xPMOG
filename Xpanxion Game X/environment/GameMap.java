@@ -1,7 +1,5 @@
 package environment;
 
-import java.awt.Point;
-
 /**
  * A class that represents the randomly generated game play area
  * The size of the GameMap is determined by the user in the constructor.
@@ -12,7 +10,6 @@ public class GameMap {
 	
 	int mapX;
 	int mapY;
-	int defaultCellLength = 10; //the number of characters the cells in the GameMap will be printed out with in the console
 	char horizontalLineChar = '-';
 	Tile gameMap[][];
 	
@@ -29,33 +26,19 @@ public class GameMap {
 	
 	/**
 	 * A method which prints the GameMap to the console showing all of the Tiles and their representative symbol
-	 * @param toPrint
+	 * @param cellLength - the number of characters the cells in the GameMap will be printed out with in the console
 	 */
-	public void printMap() {
+	public void printMap(int cellLength) {
 		for(int j = 0; j < (mapY * 2)+1; j++) {
 			System.out.print('|');
 			
 			for(int i = 0; i < mapX; i++) {
 				if(j % 2 != 0) {
-					System.out.print(cellFit(gameMap[i][j/2].getSymbol() + ""));
+					System.out.print(cellFit(gameMap[i][j/2].getSymbol() + "", cellLength));
 				}
 				else {
-					printGridLine(defaultCellLength);
+					printGridLine(cellLength);
 				}
-				System.out.print('|');
-			}
-			System.out.println();
-		}
-	}
-	
-	public void printMapOther() {
-		for(int j = 0; j < mapY; j++) {
-			System.out.print('|');
-			
-			for(int i = 0; i < mapX; i++) {
-				
-				System.out.print(cellFit(gameMap[i][j].getSymbol() + ""));
-				
 				System.out.print('|');
 			}
 			System.out.println();
@@ -104,8 +87,8 @@ public class GameMap {
 	 * @param toFit the string with which to fit
 	 * @return
 	 */
-	public String cellFit(String toFit) {
-		int spaceToAdd = defaultCellLength - toFit.length();
+	public String cellFit(String toFit, int cellLength) {
+		int spaceToAdd = cellLength - toFit.length();
 		return toFit + addSpace(spaceToAdd);
 	}
 	
