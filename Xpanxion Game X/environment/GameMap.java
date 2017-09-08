@@ -31,18 +31,31 @@ public class GameMap {
 	 * A method which prints the GameMap to the console showing all of the Tiles and their representative symbol
 	 * @param toPrint
 	 */
-	//TODO
 	public void printMap() {
 		for(int j = 0; j < (mapY * 2)+1; j++) {
 			System.out.print('|');
 			
 			for(int i = 0; i < mapX; i++) {
 				if(j % 2 != 0) {
-					System.out.print(cellFit(gameMap[i][j].getSymbol() + ""));
+					System.out.print(cellFit(gameMap[i][j/2].getSymbol() + ""));
 				}
 				else {
 					printGridLine(defaultCellLength);
 				}
+				System.out.print('|');
+			}
+			System.out.println();
+		}
+	}
+	
+	public void printMapOther() {
+		for(int j = 0; j < mapY; j++) {
+			System.out.print('|');
+			
+			for(int i = 0; i < mapX; i++) {
+				
+				System.out.print(cellFit(gameMap[i][j].getSymbol() + ""));
+				
 				System.out.print('|');
 			}
 			System.out.println();

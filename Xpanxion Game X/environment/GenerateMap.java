@@ -11,7 +11,7 @@ public class GenerateMap {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		GameMap test = new GameMap(15, 6);
+		GameMap test = new GameMap(15, 10);
 		populateMap(test);
 		test.basicPrintMap();
 		test.printMap();
