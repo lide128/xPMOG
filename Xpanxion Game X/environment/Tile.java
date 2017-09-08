@@ -14,20 +14,20 @@ import system.GameElement;
 public class Tile {
 	
 	List<GameObject> gameObjects;
+	TileCover cover;
 	Point coordinates;
 	int value;
 	boolean playerOccupied;
 	boolean excavated;
-	boolean obstacle;
 	boolean base;
 	
 	public Tile(Point assignedCoords) {
 		
 		coordinates = assignedCoords;
 		gameObjects = new ArrayList<GameObject>();
+		cover = new TileCover();
 		playerOccupied = false;
 		excavated = false;
-		obstacle = false;
 		base = false;
 		
 	}

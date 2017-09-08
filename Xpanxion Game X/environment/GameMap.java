@@ -27,6 +27,7 @@ public class GameMap {
 			
 			for(int j = 0; j < mapX; j++) {
 				if(i % 2 != 0) {
+//					if(gameMap[j][i].excavated == false) System.out.print(unexcavated);
 					System.out.print(unexcavated);
 				}
 				else {
