@@ -8,19 +8,25 @@ package system;
 public class GameObject {
 	
 	public String name;
-	public String description; //a description of the object that will be displayed in game
 	public int value; //how much the object is worth in the game currency
+	
+	public GameObject(String objectName, int objectValue) {
+		name = objectName;
+		value = objectValue;
+	}
 	
 	public void changeName(String newName) {
 		name = newName;
 	}
 	
-	public void changeDescription(String newDescription) {
-		description = newDescription;
-	}
-	
 	public void changeValue(int newValue) {
 		value = newValue;
+	}
+	
+	public boolean equals(Object gameObject) {
+		GameObject compare = (GameElement) gameObject;
+		return compare.name.equals(name) &&
+				compare.value == value;
 	}
 	
 }
