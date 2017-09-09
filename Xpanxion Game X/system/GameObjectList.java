@@ -60,5 +60,13 @@ public class GameObjectList extends ArrayList<GameObject>{
 	public void removeAllMatchingName(String name) {
 		while(removeByName(name) != null) { }
 	}
+	
+	public int getTotalWeight() {
+		return stream().mapToInt(GameObject::getWeight).sum();
+	}
+	
+	public int getTotalVolume() {
+		return stream().mapToInt(GameObject::getVolume).sum();
+	}
 
 }
