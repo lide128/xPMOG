@@ -1,7 +1,11 @@
 package environment;
 
 import java.awt.Point;
+
+import player.Player;
+import player.Team;
 import system.GameObjectList;
+import static environment.TileCover.EMPTY_COVER;
 
 /**
  * A class representing a square element of space that can be occupied with 0..n elements or objects
@@ -11,43 +15,67 @@ import system.GameObjectList;
 public class Tile {
 	
 	char symbol = '-';
-	GameObjectList gameObjects;
-	TileCover cover;
 	Point coordinates;
-	int value;
-	boolean playerOccupied;
-	boolean excavated;
-	boolean base;
+	GameObjectList gameObjects;
+	private TileCover cover = EMPTY_COVER;
+	private int inherentValue;
+	Player occupyingPlayer; // not sure how this should be implemented; we'll see
+	private Team owner;
 	
 	public Tile(Point assignedCoords) {
-		
-		gameObjects = new GameObjectList();
-		coordinates = assignedCoords;
-		cover = new TileCover();
-		playerOccupied = false;
-		excavated = false;
-		base = false;
-		
+		this(assignedCoords, EMPTY_COVER);
 	}
+	
+	public Tile(Point assignedCoords, TileCover cover) {
+		this.coordinates = assignedCoords;
+		this.gameObjects = new GameObjectList();
+		this.cover = cover;
+	}
+	
+	public Point getCoordinates() { return coordinates; }
+	
+	public TileCover getCover() { return cover; }
 	
 	/**
-	 * Removes the cover of the tile, flips excavated to true, makes the reference to the Tile Cover null
-	 * @return the list of GameObjects contained in the Tile Cover
+	 * Removes the cover of the tile, makes the reference to the {@code TileCover} null
+	 * @return the {@code TileCover}
 	 */
-	public GameObjectList removeCover() {
-		excavated = true;
-		cover = null;
-		return cover.gameObjects;
+	public TileCover removeCover() {
+		TileCover theCover = cover;
+		cover = EMPTY_COVER;
+		return theCover;
 	}
 	
-	public boolean isExcavated() {
-		return excavated == true && cover == null;
-	}
+	public int getValue() { return inherentValue; }
+	
+	public boolean hasCover() { return cover != EMPTY_COVER; }
 	
 	public char getSymbol() {
-		if(isExcavated()) return symbol;
-		return cover.symbol;
+		if (occupyingPlayer != null) {
+			return occupyingPlayer.getSymbol();
+		} else if (hasCover()) {
+			return cover.symbol;
+		} else {
+			return symbol;
+		}
 	}
 	
+	public void addPlayer(Player player) throws TileOccupiedException {
+		if (occupyingPlayer != null || !cover.isTraversible()) {
+			throw new TileOccupiedException();
+		}
+		occupyingPlayer = player;
+	}
+	
+	public void removePlayer() { occupyingPlayer = null; }
+	
+	public Team getOwner() { return owner; }
+	public void setOwner(Team newOwner) { this.owner = newOwner; }
+	
+	public class TileOccupiedException extends Exception {
+		public TileOccupiedException() {
+			super("Tile occupied!");
+		}
+	}
 
 }

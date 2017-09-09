@@ -1,16 +1,12 @@
 package environment;
 
-import java.awt.Point;
+public class Structure extends TileCover {
 
-public class Structure {
-
-	char symbol;
 	String name;
-	boolean isBase;
 	int value;
 	
-	public Structure() {
-		
-	}
+	public String getName() { return name; }
+	
+	public int getValue() { return value; }
 
 }
