@@ -1,5 +1,12 @@
 package environment;
 
+import java.awt.Point;
+import java.util.HashMap;
+import java.util.Map;
+
+import environment.Tile.TileOccupiedException;
+import player.Player;
+
 /**
  * A class that represents the randomly generated game play area
  * The size of the GameMap is determined by the user in the constructor.
@@ -12,16 +19,18 @@ public class GameMap {
 	int mapY;
 	char horizontalLineChar = '-';
 	Tile gameMap[][];
+	private Map<Player, Tile> playerLocations;
 	
 
 	public GameMap(int x, int y) {
 		mapX = x;
 		mapY = y;
 		gameMap = new Tile[mapX][mapY];
+		playerLocations = new HashMap<>();
 	}
 	
-	public void assignTile(Tile toAssign) {
-		gameMap[toAssign.coordinates.x][toAssign.coordinates.y] = toAssign;
+	public void assignTile(Tile toAssign, Point coordinates) {
+		gameMap[coordinates.x][coordinates.y] = toAssign;
 	}
 	
 	/**
@@ -49,7 +58,7 @@ public class GameMap {
 	 * Print the map to the console without any of the formatting and lines.
 	 */
 	public void basicPrintMap() {
-		for(int j = 0; j < mapY; j++) {
+		for(int j = mapY-1; j >= 0; j--) {
 			
 			for(int i = 0; i < mapX; i++) {
 				System.out.print(gameMap[i][j].getSymbol());
@@ -91,5 +100,38 @@ public class GameMap {
 		int spaceToAdd = cellLength - toFit.length();
 		return toFit + addSpace(spaceToAdd);
 	}
+	
+	public void movePlayer(Player player, Point newPoint) throws TileOccupiedException {
+		Tile tile = gameMap[newPoint.x][newPoint.y];
+		tile.addPlayer(player);
+		Tile oldTile = playerLocations.get(player);
+		if (oldTile != null)
+			oldTile.removePlayer();
+		playerLocations.put(player, tile);
+	}
+	
+	public void movePlayer(Player player, Direction direction) throws TileOccupiedException {
+		Tile oldTile = playerLocations.get(player);
+		Point coordinates = oldTile.getCoordinates();
+		Point newPoint = coordinates.getLocation(); // don't overwrite the old Tile's location
+		newPoint.translate(direction.dx, direction.dy);
+		movePlayer(player, newPoint);
+	}
+	
+	public enum Direction {
+		UP(0,1), DOWN(0,-1), LEFT(-1,0), RIGHT(1,0);
+		
+		public final int dx, dy;
+		
+		private Direction(int dx, int dy) {
+			this.dx = dx;
+			this.dy = dy;
+		}
+	}
+	
+	
+	
+	
+	
 	
 }

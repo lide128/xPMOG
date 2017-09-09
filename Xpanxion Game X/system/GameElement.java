@@ -8,30 +8,33 @@ package system;
  */
 public class GameElement extends GameObject {
 	
-	int difficulty; //how difficult the element is to mine or to breakdown/move scale of 1..5
-	int rarity; //how common it occurs in the map scale of 1..5
+	private final ElementKind kind;
 	
-	public GameElement(String elementName, int elementDifficulty, int elementValue, int elementRarity) {
-		super(elementName, elementValue);
-		difficulty = elementDifficulty;
-		rarity = elementRarity;
+	public GameElement(ElementKind kind) {
+		super(kind.getName(), kind.getElementValue());
+		this.kind = kind;
 	}
-	
-	public void changeDifficulty(int newDifficulty) {
-		difficulty = newDifficulty;
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + ((kind == null) ? 0 : kind.hashCode());
+		return result;
 	}
-	
-	public void changeRarity(int newRarity) {
-		rarity = newRarity;
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!super.equals(obj))
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		GameElement other = (GameElement) obj;
+		if (kind != other.kind)
+			return false;
+		return true;
 	}
-	
-	public boolean equals(Object element) {
-		GameElement compare = (GameElement) element;
-		return compare.name.equals(name) &&
-				compare.difficulty == difficulty &&
-				compare.value == value &&
-				compare.rarity == rarity;
-	}
-	
 
 }
