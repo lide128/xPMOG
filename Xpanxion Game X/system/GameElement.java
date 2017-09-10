@@ -9,32 +9,43 @@ package system;
 public class GameElement extends GameObject {
 	
 	private final ElementKind kind;
+	private int volume; // cm^3
 	
-	public GameElement(ElementKind kind) {
-		super(kind.getName(), kind.getElementValue());
+	/**
+	 * @param kind
+	 * @param volume in cm^3
+	 */
+	public GameElement(ElementKind kind, int volume) {
+		super(kind.getName());
 		this.kind = kind;
+		this.volume = volume;
 	}
-
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = super.hashCode();
-		result = prime * result + ((kind == null) ? 0 : kind.hashCode());
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (!super.equals(obj))
+	
+	public ElementKind getKind() { return kind; }
+	
+	/**
+	 * @param other element to be combined with this one
+	 * @return {@code true} if this element successfully absorbed the given element
+	 */
+	public boolean absorb(GameElement other) {
+		if (other.kind != this.kind)
 			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		GameElement other = (GameElement) obj;
-		if (kind != other.kind)
-			return false;
+		volume += other.volume;
 		return true;
+	}
+
+	@Override
+	public int getWeight() {
+		// cm^3 * (1000 g/cm^3) / 1000 = grams
+		return volume * kind.getDensity() / 1000;
+	}
+	
+	@Override
+	public int getVolume() { return volume; }
+
+	@Override
+	public int getValue() {
+		return kind.getValue() * getWeight();
 	}
 
 }
