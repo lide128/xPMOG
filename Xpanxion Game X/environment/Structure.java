@@ -1,11 +1,12 @@
 package environment;
 
-public class Structure extends TileCover {
+public abstract class Structure extends TileCover {
 
-	String name;
 	int value;
 	
-	public String getName() { return name; }
+	public Structure(String name, char symbol) {
+		super(name, symbol);
+	}
 	
 	public int getValue() { return value; }
 

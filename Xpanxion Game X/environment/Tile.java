@@ -14,7 +14,6 @@ import static environment.TileCover.EMPTY_COVER;
  */
 public class Tile {
 	
-	char symbol = '-';
 	Point coordinates;
 	GameObjectList gameObjects;
 	private TileCover cover = EMPTY_COVER;
@@ -37,7 +36,7 @@ public class Tile {
 	public TileCover getCover() { return cover; }
 	
 	/**
-	 * Removes the cover of the tile, makes the reference to the {@code TileCover} null
+	 * Removes the cover of the tile, setting this tile's cover to {@link TileCover#EMPTY_COVER}
 	 * @return the {@code TileCover}
 	 */
 	public TileCover removeCover() {
@@ -51,13 +50,7 @@ public class Tile {
 	public boolean hasCover() { return cover != EMPTY_COVER; }
 	
 	public char getSymbol() {
-		if (occupyingPlayer != null) {
-			return occupyingPlayer.getSymbol();
-		} else if (hasCover()) {
-			return cover.symbol;
-		} else {
-			return symbol;
-		}
+		return occupyingPlayer != null ? occupyingPlayer.getSymbol() : cover.getSymbol();
 	}
 	
 	public void addPlayer(Player player) throws TileOccupiedException {
@@ -72,7 +65,18 @@ public class Tile {
 	public Team getOwner() { return owner; }
 	public void setOwner(Team newOwner) { this.owner = newOwner; }
 	
+	/**
+	 * @return the {@code TileCover} that was able to be dug out from this tile. 
+	 * Else, returns {@link TileCover#EMPTY_COVER} if the cover was not 
+	 * {@link TileCover#isDiggable() diggable} or if there was no cover
+	 */
+	public TileCover digCover() {
+		return cover.isDiggable() ? removeCover() : EMPTY_COVER;
+	}
+
 	public class TileOccupiedException extends Exception {
+		private static final long serialVersionUID = 9030915798299569126L;
+
 		public TileOccupiedException() {
 			super("Tile occupied!");
 		}

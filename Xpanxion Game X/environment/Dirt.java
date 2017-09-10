@@ -3,7 +3,10 @@ package environment;
 public class Dirt extends TileCover {
 
 	public Dirt() {
-		this.symbol = 'X';
+		super("Dirt", 'X');
 	}
+	
+	@Override
+	public boolean isDiggable() { return true; }
 	
 }

@@ -3,8 +3,7 @@ package environment;
 public class Base extends Structure {
 
 	public Base() {
-		this.symbol = 'B';
-		this.name = "Base";
+		super("Base", 'B');
 		this.value = Integer.MAX_VALUE;
 	}
 	
