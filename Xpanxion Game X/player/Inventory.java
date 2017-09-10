@@ -23,6 +23,14 @@ public class Inventory {
 		this.maxVolume = 10000; // 10,000 cm^3 = one cubic meter
 	}
 	
+	/**
+	 * @return the total value in credits of this inventory, 
+	 * including its money and the total value of all contained {@link GameObject}s
+	 */
+	public int getValue() {
+		return currentMoney() + inventory.getTotalValue();
+	}
+	
 	int currentMoney() { return currentMoney; }
 	
 	void addMoney(int credits) {

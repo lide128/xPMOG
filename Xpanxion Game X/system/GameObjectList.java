@@ -68,5 +68,9 @@ public class GameObjectList extends ArrayList<GameObject>{
 	public int getTotalVolume() {
 		return stream().mapToInt(GameObject::getVolume).sum();
 	}
+	
+	public int getTotalValue() {
+		return stream().mapToInt(GameObject::getValue).sum();
+	}
 
 }

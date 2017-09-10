@@ -13,6 +13,8 @@ public class Team {
 		this.players = new ArrayList<>();
 	}
 	
+	public String getName() { return name; }
+	
 	public List<Player> getPlayers() {
 		return new ArrayList<>(players);
 	}
