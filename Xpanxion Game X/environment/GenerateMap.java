@@ -5,9 +5,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
-import environment.Tile.TileOccupiedException;
 import player.Player;
 import player.Team;
+import system.ElementKind;
+import system.GameElement;
 
 /**
  * A class that randomly generates a game play map 
@@ -16,49 +17,68 @@ import player.Team;
  */
 public class GenerateMap {
 
+	private static final Random rand = new Random();
+	private static final int percentDirtCover = 75;
+	private static final int percentChanceDirtIsEmpty = 30;
+	
 	public static GameMap generateMap(int xSize, int ySize, List<Team> teams) throws Exception {
-		if (teams.size() != 4)
-			throw new Exception("DON'T DO THAT -- YOU KNOW WHAT I MEAN");
+		if (teams.size() > 4 || teams.size() < 2)
+			throw new IllegalArgumentException("Unsupported number of teams; only 2-4 teams supported.");
 		GameMap map = new GameMap(xSize, ySize);
 		populateMap(map, teams);
 		return map;
 	}
 	
 	/**
-	 * Create a new game map with all unexcavated empty Tiles
+	 * Create a new game map
 	 * @param map
 	 */
 	public static void populateMap(GameMap map, List<Team> teams) {
 		Iterator<Team> it = teams.iterator();
-		Tile newGameTile;
-		Point coords;
-		Random rand = new Random();
+		
 		for(int j = 0; j < map.mapY; j++) {
-			
 			for(int i = 0; i < map.mapX; i++) {
-				TileCover cover = TileCover.EMPTY_COVER;
-				
-				if (i == 0 && (j == 0 || j == (map.mapY - 1)) || i == (map.mapX - 1) && (j == 0 || j == (map.mapY - 1))) {
-					cover = new Base();
-				} else if (rand.nextInt(100) < 0) {
-					cover = new Dirt();
-				}
-				
-				coords = new Point(i, j);
-				newGameTile = new Tile(coords, cover);
-				map.assignTile(newGameTile, coords);
-				if (cover instanceof Base) {
-					try {
-						Player player = it.next().getPlayers().get(0);
-//						newGameTile.addPlayer(player);
-						map.movePlayer(player, new Point(i,j));
-					} catch (TileOccupiedException e) {
-						// OH LORD, WHAT DO?
-						e.printStackTrace();
-					}
-				}
+				addTile(map, it, new Point(i, j));
 			}
 		}
 	}
 
+	private static void addTile(GameMap map, Iterator<Team> it, Point coords) {
+		TileCover cover = TileCover.EMPTY_COVER;
+		
+		if (map.corners().contains(coords)) {
+			cover = new Base();
+		} else if (roll(percentDirtCover)) {
+			cover = randomDirt();
+		}
+		
+		Tile newTile = new Tile(coords, cover);
+		map.assignTile(newTile, coords);
+		if (cover instanceof Base) {
+			Team team = it.next();
+			Player player = team.getPlayers().get(0);
+			map.movePlayer(player, newTile);
+		}
+	}
+	
+	private static Dirt randomDirt() {
+		int aveElementVolume = 35000; // 35 liters
+		int stdDevElementVolume = 10000; // 10 liters
+		Dirt dirt = new Dirt();
+		if (!roll(percentChanceDirtIsEmpty)) {
+			ElementKind kind = ElementKind.randomElementWeighted(rand);
+			GameElement element = new GameElement(kind, gauss(aveElementVolume, stdDevElementVolume));
+			dirt.addContents(element);
+		}
+		return dirt;
+	}
+	
+	private static boolean roll(int percentChance) {
+		return rand.nextInt(100) < percentChance;
+	}
+	
+	private static int gauss(int mean, int stdDev) {
+		return mean + stdDev * (int) rand.nextGaussian();
+	}
+	
 }
