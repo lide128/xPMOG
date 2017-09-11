@@ -10,7 +10,7 @@ public abstract class TileCover {
 	private String name;
 	
 	/** Instance representing no tile cover at all */
-	public static final TileCover EMPTY_COVER = new TileCover("Empty Cover", '-'){
+	public static final TileCover EMPTY_COVER = new TileCover("Empty Cover", ' '){
 		@Override
 		public boolean isTraversible() { return true; }
 	};
