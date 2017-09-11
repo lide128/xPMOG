@@ -134,7 +134,7 @@ public class GameMap {
 		 * @param cellLength - the number of characters the cells in the GameMap will be printed out with in the console
 		 */
 		public static void printMap(GameMap map, int cellLength) {
-			for(int j = 0; j < (map.mapY * 2)+1; j++) {
+			for(int j = (map.mapY * 2); j >= 0; j--) {
 				System.out.print('|');
 				
 				for(int i = 0; i < map.mapX; i++) {

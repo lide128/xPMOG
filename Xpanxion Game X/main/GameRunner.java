@@ -14,7 +14,6 @@ import player.Team;
 
 public class GameRunner {
 
-private static final int CELL_LENGTH = 5;
 	
 	public static void main(String[] args) throws Exception {
 		

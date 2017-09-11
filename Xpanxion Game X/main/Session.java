@@ -15,6 +15,7 @@ import environment.TileCover;
 public class Session {
 	
 	private static int DEFAULT_PAUSE = 3000;
+	private int CELL_LENGTH = 5;
 
 	private GameMap map;
 	private List<Team> teams;
@@ -61,8 +62,8 @@ public class Session {
 		System.out.println(scoreboard());
 		System.out.println();
 		
-		map.basicPrintMap();
-//		map.printMap(CELL_LENGTH);
+//		map.basicPrintMap();
+		map.printMap(CELL_LENGTH);
 		try { Thread.sleep(DEFAULT_PAUSE); } catch (Exception e) {}
 	}
 	
