@@ -40,7 +40,7 @@ public class Session {
 						Optional<? extends GameObject> spillOver = player.acquireObject(found);
 						msg += " and found " + found;
 						if (spillOver.isPresent()) {
-							System.out.println(" but couldn't carry any more!");
+							msg += " but couldn't carry any more!";
 						}
 					}
 				} else {

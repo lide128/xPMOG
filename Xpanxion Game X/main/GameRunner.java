@@ -41,8 +41,8 @@ public class GameRunner {
 		teams.add(team4);
 		
 		// GENERATE MAP
-		int mapX = 25;
-		int mapY = 25;
+		int mapX = 30;
+		int mapY = 22;
 		GameMap map = GenerateMap.generateMap(mapX, mapY, teams);
 		
 		Session session = new Session(map, teams);
