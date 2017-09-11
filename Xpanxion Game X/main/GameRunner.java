@@ -51,7 +51,7 @@ public class GameRunner {
 		Random rand = new Random();
 		
 //		for (int i = 0; i < Math.min(mapX, mapY) - 2; i++) {
-		for (int i = 0; i < 100; i++) {
+		for (int i = 0; i < 1000; i++) {
 			Player player;
 			for (Team team : teams) {
 				player = team.getPlayers().get(0); // should only be one right now

@@ -17,10 +17,12 @@ public class Inventory {
 	public Inventory() {
 		this.currentMoney = 0;
 		this.inventory = new GameObjectList();
-		// Set max weight to hold at least one liter of anything: 
-		// kg/m^3 * 1000 g/kg / 1000 liters/m^3 * 1 liter = grams
-		this.maxWeight = ElementKind.heaviestElement().getDensity() * 1;
-		this.maxVolume = 10000; // 10,000 cm^3 = one cubic meter
+		// Set max weight to hold at least one hundred liters of anything: 
+		// kg/m^3 * 1000 g/kg / 1000 liters/m^3 * 100 liter = grams
+//		this.maxWeight = ElementKind.heaviestElement().getDensity() * 100;
+		this.maxWeight = Integer.MAX_VALUE;
+//		this.maxVolume = 10000; // 10,000 cm^3 = one cubic meter
+		this.maxVolume = Integer.MAX_VALUE;
 	}
 	
 	/**
