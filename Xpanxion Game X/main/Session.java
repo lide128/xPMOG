@@ -1,12 +1,14 @@
 package main;
 
 import java.util.List;
+import java.util.Optional;
 
 import player.Player;
 import player.Team;
 import system.GameObject;
 import environment.GameMap;
 import environment.GameMap.Direction;
+import environment.GameMap.TileNotFoundException;
 import environment.Tile;
 import environment.TileCover;
 
@@ -23,21 +25,28 @@ public class Session {
 		drawAndWait(map, "Begin!");
 	}
 	
-	void movePlayerOrDig(Player player, Direction direction) {
+	void movePlayerOrDig(Player player, Direction direction) throws TileNotFoundException {
 		String msg = "";
 		boolean blocked = !map.movePlayer(player, direction);
 		if (blocked) {
-			Tile newTile = map.translate(map.getLocation(player), direction);
-			TileCover dugCover = newTile.digCover();
-			msg += player.getName();
-			if (dugCover != TileCover.EMPTY_COVER) {
-				msg += " dug cover: " + dugCover.getName();
-				for (GameObject found : dugCover.getContents()) {
-					player.acquireObject(found);
-					msg += " and found " + found;
+			try {
+				Tile newTile = map.translate(map.getLocation(player), direction);
+				TileCover dugCover = newTile.digCover();
+				msg += player.getName();
+				if (dugCover != TileCover.EMPTY_COVER) {
+					msg += " dug cover: " + dugCover.getName();
+					for (GameObject found : dugCover.getContents()) {
+						Optional<? extends GameObject> spillOver = player.acquireObject(found);
+						msg += " and found " + found;
+						if (spillOver.isPresent()) {
+							System.out.println(" but couldn't carry any more!");
+						}
+					}
+				} else {
+					msg += " failed to dig!";
 				}
-			} else {
-				msg += " failed to dig!";
+			} catch (TileNotFoundException e) {
+				throw e;
 			}
 		} else {
 			msg += player.getName() + " moved " + direction.name();

@@ -4,6 +4,7 @@ import java.awt.Point;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Random;
 import java.util.Set;
 
 import player.Player;
@@ -58,7 +59,14 @@ public class GameMap {
 	 * or {@code false} if the adjacent tile was not {@link TileCover#isTraversible() traversible} 
 	 */
 	public boolean movePlayer(Player player, Direction direction) {
-		return movePlayer(player, translate(getLocation(player), direction));
+		boolean pass = false;
+		try {
+			pass = movePlayer(player, translate(getLocation(player), direction));
+		} catch (ArrayIndexOutOfBoundsException | TileNotFoundException e) {
+//			System.out.println("Can't move off the map!");
+			// do nothing, return false
+		}
+		return pass;
 	}
 	
 //	void movePlayer(Player player, Point newPoint) throws TileOccupiedException {
@@ -85,13 +93,18 @@ public class GameMap {
 	
 	/**
 	 * @return the tile that is adjacent to the given tile in the given direction
+	 * @throws TileNotFoundException 
 	 */
-	public Tile translate(Tile tile, Direction direction) {
+	public Tile translate(Tile tile, Direction direction) throws TileNotFoundException {
 		return translate(tile, direction, 1);
 	}
 	
-	public Tile translate(Tile tile, Direction direction, int distance) {
-		return getTile(translate(tile.getCoordinates(), direction, distance));
+	public Tile translate(Tile tile, Direction direction, int distance) throws TileNotFoundException {
+		try {
+			return getTile(translate(tile.getCoordinates(), direction, distance));
+		} catch (ArrayIndexOutOfBoundsException e) {
+			throw new TileNotFoundException(e);
+		}
 	}
 	
 //	private static Point translate(Point point, Direction direction) {
@@ -204,6 +217,22 @@ public class GameMap {
 		private Direction(int dx, int dy) {
 			this.dx = dx;
 			this.dy = dy;
+		}
+		
+		public static Direction random(Random rand) {
+			Direction[] directions = Direction.values();
+			return directions[rand.nextInt(directions.length)];
+		}
+	}
+	
+	public class TileNotFoundException extends Exception {
+		private static final long serialVersionUID = 8626777410520409827L;
+
+		private TileNotFoundException() {
+			super("Tile not found!");
+		}
+		private TileNotFoundException(Throwable t) {
+			super("Tile not found!", t);
 		}
 	}
 	

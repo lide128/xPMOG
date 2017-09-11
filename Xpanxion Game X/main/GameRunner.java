@@ -1,10 +1,13 @@
 package main;
 
+import environment.GameMap.Direction;
+import environment.GameMap.TileNotFoundException;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import environment.GameMap;
-import static environment.GameMap.Direction.*;
 import environment.GenerateMap;
 import player.Player;
 import player.Team;
@@ -14,6 +17,8 @@ public class GameRunner {
 private static final int CELL_LENGTH = 5;
 	
 	public static void main(String[] args) throws Exception {
+		
+		// GENERATE TEAMS
 		List<Team> teams = new ArrayList<>();
 		
 		Team team1 = new Team("Team One!");
@@ -36,17 +41,32 @@ private static final int CELL_LENGTH = 5;
 		teams.add(team3);
 		teams.add(team4);
 		
-		int mapX = 15;
-		int mapY = 10;
+		// GENERATE MAP
+		int mapX = 25;
+		int mapY = 25;
 		GameMap map = GenerateMap.generateMap(mapX, mapY, teams);
 		
 		Session session = new Session(map, teams);
 
-		for (int i = 0; i < Math.min(mapX, mapY) - 2; i++) {
-			session.movePlayerOrDig(player1, UP);
-			session.movePlayerOrDig(player2, LEFT);
-			session.movePlayerOrDig(player3, RIGHT);
-			session.movePlayerOrDig(player4, DOWN);
+		// DO STUFF FOR A WHILE
+		Random rand = new Random();
+		
+//		for (int i = 0; i < Math.min(mapX, mapY) - 2; i++) {
+		for (int i = 0; i < 100; i++) {
+			Player player;
+			for (Team team : teams) {
+				player = team.getPlayers().get(0); // should only be one right now
+				boolean moved = false;
+			
+				while (!moved) {
+					try {
+						session.movePlayerOrDig(player, Direction.random(rand));
+						moved = true;
+					} catch (TileNotFoundException e) {
+						// tried to walk off the map, try again
+					}
+				}
+			}
 		}
 	}
 	
