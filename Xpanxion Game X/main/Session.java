@@ -1,16 +1,18 @@
 package main;
 
+import java.text.NumberFormat;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 
-import player.Player;
-import player.Team;
-import system.GameObject;
 import environment.GameMap;
 import environment.GameMap.Direction;
 import environment.GameMap.TileNotFoundException;
 import environment.Tile;
 import environment.TileCover;
+import player.Player;
+import player.Team;
+import system.GameObject;
 
 public class Session {
 	
@@ -69,12 +71,23 @@ public class Session {
 	
 	private String scoreboard() {
 		String output = "";
+		Team leading = null;
+		int topScore = 0;
 		
 		for (Team team : teams) {
-			output += team.getName() + ":\n";
+			Player player = team.getPlayers().get(0);
+			int netWorth = player.netWorth();
+			if (netWorth > topScore) {
+				topScore = netWorth;
+				leading = team;
+			}
+		}
+		for (Team team : teams) {
+			output += team.getName() + (team.equals(leading) ? " <-- Leader" : "") + "\n";
 			for (Player player : team.getPlayers()) {
 				output += player.getName() + ": ";
-				output += player.netWorth() + "\n";
+				 NumberFormat numberFormat = NumberFormat.getNumberInstance(Locale.US);
+			     output += numberFormat.format(player.netWorth()) + "\n";
 			}
 		}
 		
