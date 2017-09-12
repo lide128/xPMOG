@@ -21,7 +21,7 @@ public class Inventory {
 		// kg/m^3 * 1000 g/kg / 1000 liters/m^3 * 100 liter = grams
 		this.maxWeight = ElementKind.heaviestElement().getDensity() * 100;
 //		this.maxWeight = Integer.MAX_VALUE;
-		this.maxVolume = 10000; // 10,000 cm^3 = one cubic meter
+		this.maxVolume = 1000000; // 1,000,000 cm^3 = one cubic meter
 //		this.maxVolume = Integer.MAX_VALUE;
 	}
 	
