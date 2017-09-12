@@ -7,16 +7,16 @@ import system.GameObject;
 public class Player {
 
 	private String name;
-	private final char symbol;
+	private final String symbol;
 	private final Inventory inventory;
 	
-	public Player(String name, char symbol) {
+	public Player(String name, String symbol) {
 		this.name = name;
 		this.symbol = symbol;
 		this.inventory = new Inventory();
 	}
 	
-	public char getSymbol() { return symbol; }
+	public String getSymbol() { return symbol; }
 	
 	public int currentMoney() { return inventory.currentMoney(); }
 	public void acquireMoney(int credits) { inventory.addMoney(credits); }

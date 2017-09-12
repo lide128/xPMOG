@@ -25,10 +25,10 @@ public class GameRunner {
 		Team team3 = new Team("Team Three!");
 		Team team4 = new Team("Team Four!");
 		
-		Player player1 = new Player("Player One", '1');
-		Player player2 = new Player("Player Two", '2');
-		Player player3 = new Player("Player Three", '3');
-		Player player4 = new Player("Player Four", '4');
+		Player player1 = new Player("Player One", "1");
+		Player player2 = new Player("Player Two", "2");
+		Player player3 = new Player("Player Three", "3");
+		Player player4 = new Player("Player Four", "4");
 		
 		team1.addPlayer(player1);
 		team2.addPlayer(player2);

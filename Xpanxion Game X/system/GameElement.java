@@ -16,7 +16,7 @@ public class GameElement extends GameObject {
 	 * @param volume in cm^3
 	 */
 	public GameElement(ElementKind kind, int volume) {
-		super(kind.getName());
+		super(kind.getName(), kind.getSymbol());
 		this.kind = kind;
 		this.volume = volume;
 	}

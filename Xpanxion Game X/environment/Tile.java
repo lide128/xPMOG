@@ -1,11 +1,14 @@
 package environment;
 
+import static environment.TileCover.EMPTY_COVER;
+
 import java.awt.Point;
+import java.util.Optional;
 
 import player.Player;
 import player.Team;
+import system.GameObject;
 import system.GameObjectList;
-import static environment.TileCover.EMPTY_COVER;
 
 /**
  * A class representing a square element of space that can be occupied with 0..n elements or objects
@@ -15,7 +18,8 @@ import static environment.TileCover.EMPTY_COVER;
 public class Tile {
 	
 	Point coordinates;
-	GameObjectList gameObjects;
+	private GameObjectList lyingOnGround;
+	private GameObjectList buried;
 	private TileCover cover = EMPTY_COVER;
 	private int inherentValue;
 	Player occupyingPlayer; // not sure how this should be implemented; we'll see
@@ -27,11 +31,34 @@ public class Tile {
 	
 	public Tile(Point assignedCoords, TileCover cover) {
 		this.coordinates = assignedCoords;
-		this.gameObjects = new GameObjectList();
+		this.lyingOnGround = new GameObjectList();
+		this.buried = new GameObjectList();
 		this.cover = cover;
 	}
 	
 	public Point getCoordinates() { return coordinates; }
+	
+	public GameObject pickUp(GameObject pickedUp) {
+		return lyingOnGround.get(lyingOnGround.indexOf(pickedUp));
+	}
+	
+	public GameObjectList pickUpAll() {
+		GameObjectList grabbed = lyingOnGround;
+		lyingOnGround = new GameObjectList();
+		return grabbed;
+	}
+	
+	public void drop(GameObject dropped) {
+		lyingOnGround.add(dropped);
+	}
+	
+	public GameObject unearth(GameObject dugUp) {
+		return buried.get(buried.indexOf(dugUp));
+	}
+	
+	public void bury(GameObject toBury) {
+		buried.add(toBury);
+	}
 	
 	public TileCover getCover() { return cover; }
 	
@@ -49,8 +76,17 @@ public class Tile {
 	
 	public boolean hasCover() { return cover != EMPTY_COVER; }
 	
-	public char getSymbol() {
-		return occupyingPlayer != null ? occupyingPlayer.getSymbol() : cover.getSymbol();
+	public String getSymbol() {
+		if (occupyingPlayer != null) {
+			return occupyingPlayer.getSymbol();
+		} else if (cover != EMPTY_COVER) {
+			return cover.getSymbol();
+		}
+		if (!lyingOnGround.isEmpty())
+			return lyingOnGround.mostValuableObject().get().getSymbol();
+		else
+			return cover.getSymbol(); // EMPTY_COVER symbol
+		
 	}
 	
 	public void addPlayer(Player player) throws TileOccupiedException {

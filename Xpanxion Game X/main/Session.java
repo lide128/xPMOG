@@ -42,6 +42,7 @@ public class Session {
 						Optional<? extends GameObject> spillOver = player.acquireObject(found);
 						msg += " and found " + found;
 						if (spillOver.isPresent()) {
+							newTile.drop(spillOver.get());
 							msg += " but couldn't carry any more!";
 						}
 					}

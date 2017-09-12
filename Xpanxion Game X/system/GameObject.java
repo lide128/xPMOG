@@ -7,13 +7,16 @@ package system;
  */
 public abstract class GameObject {
 	
-	public String name;
+	public String name, symbol;
 	
-	public GameObject(String objectName) {
+	public GameObject(String objectName, String symbol) {
 		name = objectName;
+		this.symbol = symbol;
 	}
 	
 	public String getName() { return name; }
+	
+	public String getSymbol() { return symbol; }
 	
 	/** @return weight of this object in grams */
 	public abstract int getWeight();

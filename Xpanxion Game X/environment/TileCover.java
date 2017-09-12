@@ -5,17 +5,17 @@ import system.GameObjectList;
 
 public abstract class TileCover {
 	
-	private char symbol;
+	private String symbol;
 	protected GameObjectList gameObjects;
 	private String name;
 	
 	/** Instance representing no tile cover at all */
-	public static final TileCover EMPTY_COVER = new TileCover("Empty Cover", ' '){
+	public static final TileCover EMPTY_COVER = new TileCover("Empty Cover", " "){
 		@Override
 		public boolean isTraversible() { return true; }
 	};
 	
-	public TileCover(String name, char symbol) {
+	public TileCover(String name, String symbol) {
 		this.name = name;
 		this.symbol = symbol;
 		gameObjects = new GameObjectList();
@@ -23,7 +23,7 @@ public abstract class TileCover {
 	
 	public String getName() { return name; }
 	
-	public char getSymbol() { return symbol; }
+	public String getSymbol() { return symbol; }
 
 	public GameObjectList getContents() { return gameObjects; }
 	
