@@ -22,13 +22,14 @@ public class GameMap {
 	int mapY;
 	Tile[][] gameMap;
 	private Map<Player, Tile> playerLocations;
-	
+	private Map<Structure, Tile> structureLocations;
 
 	public GameMap(int x, int y) {
 		mapX = x;
 		mapY = y;
 		gameMap = new Tile[mapX][mapY];
 		playerLocations = new HashMap<>();
+		structureLocations = new HashMap<>();
 	}
 	
 	public Set<Point> corners() {
@@ -40,12 +41,16 @@ public class GameMap {
 		return corners;
 	}
 	
+	public Tile getTile(Point coordinates) {
+		return gameMap[coordinates.x][coordinates.y];
+	}
+	
 	public Tile getLocation(Player player) {
 		return playerLocations.get(player);
 	}
 	
-	public Tile getTile(Point coordinates) {
-		return gameMap[coordinates.x][coordinates.y];
+	public Tile getLocation(Structure structure) {
+		return structureLocations.get(structure);
 	}
 	
 	void assignTile(Tile toAssign, Point coordinates) {
@@ -88,6 +93,20 @@ public class GameMap {
 		Tile oldTile = playerLocations.put(player, tile);
 		if (oldTile != null)
 			oldTile.removePlayer();
+		return true;
+	}
+	
+	public TileCover digCover(Tile tile) {
+		return tile.digCover();
+	}
+	
+	boolean placeStructure(Structure structure, Tile tile) {
+		try {
+			tile.addCover(structure);
+		} catch (TileOccupiedException e) {
+			return false;
+		}
+		structureLocations.put(structure, tile);
 		return true;
 	}
 	
@@ -222,6 +241,25 @@ public class GameMap {
 		public static Direction random(Random rand) {
 			Direction[] directions = Direction.values();
 			return directions[rand.nextInt(directions.length)];
+		}
+
+		/**
+		 * Crude pathing
+		 * 
+		 * @param distance a Point representing a destination's relation to an origin
+		 * @return the {@code Direction} most representative of the distance to cover or {@code null} for (0,0)
+		 */
+		public static Direction onto(Point distance) {
+			int x = distance.x;
+			int y = distance.y;
+			
+			if (x == 0 && y == 0)
+				return null;
+			
+			if (Math.abs(x) >= Math.abs(y))
+				return x < 0 ? LEFT : RIGHT;
+			else
+				return y < 0 ? DOWN : UP;
 		}
 	}
 	

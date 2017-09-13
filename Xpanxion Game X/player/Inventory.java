@@ -33,6 +33,14 @@ public class Inventory {
 		return currentMoney() + inventory.getTotalValue();
 	}
 	
+	public boolean isEmpty() {
+		return inventory.isEmpty();
+	}
+
+	public boolean isFull() {
+		return inventory.getTotalWeight() >= maxWeight || inventory.getTotalVolume() >= maxVolume;
+	}
+	
 	int currentMoney() { return currentMoney; }
 	
 	void addMoney(int credits) {
@@ -57,6 +65,17 @@ public class Inventory {
 		return Optional.empty();
 	}
 	
+	Optional<GameObjectList> addAll(GameObjectList objects) {
+		while (!objects.isEmpty()) {
+			Optional<? extends GameObject> added = add(objects.remove(0));
+			if (added.isPresent()){
+				objects.add(added.get());
+				return Optional.of(objects);
+			}
+		}
+		return Optional.empty();
+	}
+	
 	/** 
 	 * @return an {@code Optional} which contains the GameElement that 
 	 * represents portion of the given element that did not fit into this inventory
@@ -78,5 +97,24 @@ public class Inventory {
 		
 		return spillover;
 	}
+	
+	GameObject removeObject(GameObject obj) throws ObjectNotFoundException {
+		if (!inventory.contains(obj))
+			throw new ObjectNotFoundException();
+		return inventory.get(inventory.indexOf(obj));
+	}
+	
+	GameObjectList removeAllObjects() {
+		GameObjectList oldObjects = inventory;
+		inventory = new GameObjectList();
+		return oldObjects;
+	}
+
+	public static class ObjectNotFoundException extends Exception {
+		public ObjectNotFoundException() {
+			super("Object not found!");
+		}
+	}
+
 	
 }

@@ -23,5 +23,9 @@ public class Base extends Structure {
 	public void storeObject(GameObject obj) {
 		inventory.add(obj);
 	}
+
+	public void storeAll(GameObjectList objects) {
+		inventory.addAll(objects);
+	}
 	
 }
