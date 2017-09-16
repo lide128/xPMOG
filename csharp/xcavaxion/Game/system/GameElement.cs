@@ -8,27 +8,27 @@ namespace system {
 	 * @author Alex White
 	 *
 	 */
-	public class GameElement : GameObject {
-		
+	public class GameElement extends GameObject {
+
 		private final ElementKind kind;
 		private int volume; // cm^3
-		
+
 		/**
-		 * @param kind
-		 * @param volume in cm^3
-		 */
+	 * @param kind
+	 * @param volume in cm^3
+	 */
 		public GameElement(ElementKind kind, int volume) {
-			super(kind.getName());
+			super(kind.getName(), kind.getSymbol());
 			this.kind = kind;
 			this.volume = volume;
 		}
-		
+
 		public ElementKind getKind() { return kind; }
-		
+
 		/**
-		 * @param other element to be combined with this one
-		 * @return {@code true} if this element successfully absorbed the given element
-		 */
+	 * @param other element to be combined with this one
+	 * @return {@code true} if this element successfully absorbed the given element
+	 */
 		public boolean absorb(GameElement other) {
 			if (other.kind != this.kind)
 				return false;
@@ -41,7 +41,7 @@ namespace system {
 			// cm^3 * (1000 g/cm^3) / 1000 = grams
 			return volume * kind.getDensity() / 1000;
 		}
-		
+
 		@Override
 		public int getVolume() { return volume; }
 

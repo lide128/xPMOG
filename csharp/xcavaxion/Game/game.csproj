@@ -39,18 +39,26 @@
     <Compile Include="system\GameElement.cs" />
     <Compile Include="system\GameObject.cs" />
     <Compile Include="system\GameObjectList.cs" />
-    <Compile Include="Environment\TileCover.cs" />
     <Compile Include="Main\GameRunner.cs" />
     <Compile Include="Main\Session.cs" />
     <Compile Include="Player\Inventory.cs" />
     <Compile Include="Player\Player.cs" />
     <Compile Include="Player\Team.cs" />
+    <Compile Include="Player\AI.cs" />
+    <Compile Include="Environment\Base.cs" />
+    <Compile Include="Environment\Dirt.cs" />
+    <Compile Include="Environment\GameMap.cs" />
+    <Compile Include="Environment\GenerateMap.cs" />
+    <Compile Include="Environment\Structure.cs" />
+    <Compile Include="Environment\Tile.cs" />
+    <Compile Include="Environment\TileCover.cs" />
+    <Compile Include="Main\CodeNuggetNotes.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
     <Folder Include="system\" />
-    <Folder Include="Environment\" />
     <Folder Include="Main\" />
     <Folder Include="Player\" />
+    <Folder Include="Environment\" />
   </ItemGroup>
 </Project>
