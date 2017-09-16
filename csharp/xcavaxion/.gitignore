@@ -1,0 +1,8 @@
+*.class
+.classpath
+.project
+.settingsTemp
+cache
+metadata
+.idea
+Temp
