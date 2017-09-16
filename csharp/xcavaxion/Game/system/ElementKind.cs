@@ -2,7 +2,7 @@ using System;
 
 namespace system {
 
-	public enum ElementKind {
+	public class ElementKind {
 
 		// densities are real-world densities in kg/m^3
 		// NOTE: 1 kg/m^3 = 1000 g/cm^3
@@ -10,19 +10,19 @@ namespace system {
 
 		// TODO change relativePrevalence values to something more realistic
 
-		WATER	("Water", 	"you can drink it", 							"H2O", 	1, 12, 	4, 	1000),
-		HELIUM	("Helium", 	"lighter than air", 							"He", 	5, 50, 	1, 	1), // actually, .164
-		GOLD	("Gold", 	"shiny, rare, conductive, and easily maliable", "Au", 	4, 200, 1, 	19320),
-		SILVER	("Silver", 	"shiny, and less rare", 						"Ag", 	4, 100, 1, 	10490),
-		URANIUM	("Uranium", "dense, toxic, and radioactive", 				"U", 	4, 75, 	2, 	19100),
-		LEAD	("Lead", 	"toxic and malliable", 							"Pb", 	3, 30, 	4, 	11340),
-		COPPER	("Copper", 	"conductive, shiny, and easily tarnishes", 		"Cu", 	3, 35, 	3, 	8960),
-		IRON	("Iron", 	"strong, magnetic, and malliable", 				"Fe", 	2, 25, 	4, 	7870),
-		CARBON	("Carbon", 	"forms strong bonds, useful in many forms", 	"C", 	1, 10, 	5, 	2000),
-		;
+		public readonly ElementKind 
+			WATER   = new ElementKind("Water", 	"you can drink it", 							"H2O", 	1, 12, 	4, 	1000),
+			HELIUM  = new ElementKind("Helium", 	"lighter than air", 							"He", 	5, 50, 	1, 	1), // actually, .164
+			GOLD    = new ElementKind("Gold", 	"shiny, rare, conductive, and easily maliable", "Au", 	4, 200, 1, 	19320),
+			SILVER  = new ElementKind("Silver", 	"shiny, and less rare", 						"Ag", 	4, 100, 1, 	10490),
+			URANIUM = new ElementKind("Uranium", "dense, toxic, and radioactive", 				"U", 	4, 75, 	2, 	19100),
+			LEAD    = new ElementKind("Lead", 	"toxic and malliable", 							"Pb", 	3, 30, 	4, 	11340),
+			COPPER  = new ElementKind("Copper", 	"conductive, shiny, and easily tarnishes", 		"Cu", 	3, 35, 	3, 	8960),
+			IRON    = new ElementKind("Iron", 	"strong, magnetic, and malliable", 				"Fe", 	2, 25, 	4, 	7870),
+		CARBON  = new ElementKind("Carbon", 	"forms strong bonds, useful in many forms", 	"C", 	1, 10, 	5, 	2000);
 
-		private final String name, description, symbol;
-		private final int elementDifficulty, valueByWeight, relativePrevalence, density;
+		private readonly String name, description, symbol;
+		private readonly int elementDifficulty, valueByWeight, relativePrevalence, density;
 
 		private ElementKind(String elementName, 
 			String description, 

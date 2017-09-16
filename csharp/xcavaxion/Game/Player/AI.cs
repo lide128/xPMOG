@@ -7,7 +7,7 @@ namespace Player {
 
 	public class AI {
 
-		private static final Random rand = new Random();
+		private static readonly Random rand = new Random();
 		
 		public static Action takeTurn(GameMap map, Player player) {
 			if (map.getLocation(player).canPickUp() && !player.getInventory().isFull())
@@ -40,15 +40,15 @@ namespace Player {
 			return Direction.onto(distance);
 		}
 		
-		public static interface Action {
+		public interface Action {
 			
 		}
 		
-		public static class AdjacentAction implements Action {
+		public class AdjacentAction implements Action {
 			// move or dig adjacent
 			// construct building adjacent
 			
-			private final Direction direction; 
+			private readonly Direction direction; 
 			
 			public AdjacentAction(Direction direction) {
 				this.direction = direction;
@@ -57,7 +57,7 @@ namespace Player {
 			public Direction getDirection() { return direction; }
 		}
 		
-		public static class HereAction implements Action {
+		public class HereAction implements Action {
 			// turn?
 			// get GameObject from here
 			// get all from here
@@ -67,7 +67,7 @@ namespace Player {
 			// bury GameObject here
 		}
 		
-		public static class PickUpAllAction extends HereAction {
+		public class PickUpAllAction extends HereAction {
 		}
 		
 		public static class DepositAllAction extends HereAction {

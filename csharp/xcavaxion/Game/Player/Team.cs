@@ -1,12 +1,13 @@
 using System;
+using Environment;
 
 namespace Player {
 
 	public class Team {
 
-		private final String name;
-		private final List<Player> players;
-		private final List<Base> bases;
+		private readonly String name;
+		private readonly List<Player> players;
+		private readonly List<Base> bases;
 
 		public Team(String name) {
 			this.name = name;
@@ -28,8 +29,8 @@ namespace Player {
 			return new ArrayList<>(bases);
 		}
 
-		public void addBase(Base base) {
-			bases.add(base);
+		public void addBase(Base b) {
+			bases.add(b);
 		}
 	}
 

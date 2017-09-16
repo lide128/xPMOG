@@ -11,8 +11,8 @@ namespace system {
 	 */
 		public boolean containsByName(String name) {
 			boolean gameObjectFound = false;
-			for(GameObject object: this) {
-				if(object.name.equals(name)) gameObjectFound = true;
+			foreach(GameObject o in this) {
+				if(o.name.equals(name)) gameObjectFound = true;
 			}
 			return gameObjectFound;
 		}
@@ -36,8 +36,8 @@ namespace system {
 	 */
 		public GameObject getByName(String name) {
 			GameObject toGet = null;
-			for(GameObject object: this) {
-				if(object.name.equals(name)) toGet = object;
+			foreach(GameObject o in this) {
+				if(o.name.equals(name)) toGet = o;
 			}
 			return toGet;
 		}
@@ -75,7 +75,6 @@ namespace system {
 
 		public Optional<GameObject> mostValuableObject() {
 			BinaryOperator<GameObject> bestFinder = new BinaryOperator<GameObject>() {
-				@Override
 				public GameObject apply(GameObject t, GameObject u) {
 					return u.getValue() > t.getValue() ? u : t;
 				}};

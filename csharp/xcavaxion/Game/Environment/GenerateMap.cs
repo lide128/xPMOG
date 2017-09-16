@@ -13,12 +13,12 @@ namespace Environment {
 	 */
 	public class GenerateMap {
 
-		private static final Random rand = new Random();
-		private static final int minimumTilesPerPlayer = 10;
-		private static final int percentDirtCover = 75;
-		private static final int percentChanceDirtIsEmpty = 30;
+		private static readonly Random rand = new Random();
+		private static readonly int minimumTilesPerPlayer = 10;
+		private static readonly int percentDirtCover = 75;
+		private static readonly int percentChanceDirtIsEmpty = 30;
 
-		public static GameMap generateMap(int xSize, int ySize, List<Team> teams) throws Exception {
+		public GameMap generateMap(int xSize, int ySize, List<Team> teams) throws Exception {
 			if (teams.size() > 4 || teams.size() < 2)
 				throw new IllegalArgumentException("Unsupported number of teams; only 2-4 teams supported.");
 			long players = teams.stream().flatMap(team -> team.getPlayers().stream()).count();

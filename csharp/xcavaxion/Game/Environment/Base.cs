@@ -1,4 +1,7 @@
-namespace environment {
+using System;
+using system;
+
+namespace Environment {
 	public class Base : Structure {
 
 		public Base() : base("Base", 'B')

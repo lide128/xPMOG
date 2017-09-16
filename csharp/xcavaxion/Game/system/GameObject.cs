@@ -30,7 +30,6 @@ namespace system {
 		/** @return the value of this object in credits */
 		public abstract int getValue();
 
-		@Override
 		public String toString() { return getName(); }
 
 	}

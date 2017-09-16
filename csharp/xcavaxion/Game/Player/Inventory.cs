@@ -1,24 +1,12 @@
 using System;
 
-using system.ElementKind;
-using system.GameElement;
-using system.GameObject;
-using system.GameObjectList;
+using system;
 
 namespace Player {
 
-	package player;
-
-	import java.util.Optional;
-
-	import system.ElementKind;
-	import system.GameElement;
-	import system.GameObject;
-	import system.GameObjectList;
-
 	public class Inventory {
 
-		private int currentMoney; // credits held
+		private int currentMoney { get; } // credits held
 		private GameObjectList inventory;
 		private int maxWeight; // grams
 		private int maxVolume; // cm^3
@@ -49,8 +37,6 @@ namespace Player {
 		public boolean isFull() {
 			return inventory.getTotalWeight() >= maxWeight || inventory.getTotalVolume() >= maxVolume;
 		}
-
-		int currentMoney() { return currentMoney; }
 
 		void addMoney(int credits) {
 			currentMoney += credits;

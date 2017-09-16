@@ -11,8 +11,7 @@ namespace Environment
 		private String name;
 
 		/** Instance representing no tile cover at all */
-		public static final TileCover EMPTY_COVER = new TileCover("Empty Cover", '-'){
-			@Override
+		public static readonly TileCover EMPTY_COVER = new TileCover("Empty Cover", '-'){
 			public boolean isTraversible() { return true; }
 		};
 

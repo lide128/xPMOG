@@ -35,7 +35,7 @@ namespace Main {
 		public class Robot {
 			
 			void executeThePlayersCode(List<Operation> steps) {
-				for (Operation op : steps) {
+				foreach (Operation op in steps) {
 					CodeNugget nugget = op.nugget;
 					nugget.getFunc().test(this, op.param);
 					

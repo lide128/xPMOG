@@ -8,17 +8,17 @@ namespace system {
 	 * @author Alex White
 	 *
 	 */
-	public class GameElement extends GameObject {
+	public class GameElement : GameObject {
 
-		private final ElementKind kind;
+		private readonly ElementKind kind;
 		private int volume; // cm^3
 
-		/**
+	/**
 	 * @param kind
 	 * @param volume in cm^3
 	 */
-		public GameElement(ElementKind kind, int volume) {
-			super(kind.getName(), kind.getSymbol());
+		public GameElement(ElementKind kind, int volume) : base(kind.getName(), kind.getSymbol())
+		{
 			this.kind = kind;
 			this.volume = volume;
 		}
@@ -36,16 +36,13 @@ namespace system {
 			return true;
 		}
 
-		@Override
 		public int getWeight() {
 			// cm^3 * (1000 g/cm^3) / 1000 = grams
 			return volume * kind.getDensity() / 1000;
 		}
 
-		@Override
 		public int getVolume() { return volume; }
 
-		@Override
 		public int getValue() {
 			return kind.getValue() * getWeight();
 		}

@@ -1,13 +1,13 @@
 using System;
-using system.GameObject;
+using system;
 
 namespace Player {
 
 	public class Player {
 
-		private String name;
-		private final String symbol;
-		private final Inventory inventory;
+		private String name { public get; }
+		private String symbol { public get; }
+		private Inventory inventory { public get; }
 		private Team team;
 
 		public Player(String name, String symbol, Team team) {
@@ -53,4 +53,5 @@ namespace Player {
 		Base getHomeBase() {
 			return getTeam().getBases().get(0);
 		}
+	}
 }

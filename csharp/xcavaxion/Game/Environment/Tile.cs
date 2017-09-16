@@ -98,7 +98,7 @@ namespace Environment {
 			cover = newCover;
 		}
 
-		/**
+	/**
 	 * Removes the cover of the tile, setting this tile's cover to {@link TileCover#EMPTY_COVER}
 	 * @return the {@code TileCover}
 	 */
@@ -108,7 +108,7 @@ namespace Environment {
 			return theCover;
 		}
 
-		/**
+	/**
 	 * @return the {@code TileCover} that was able to be dug out from this tile. 
 	 * Else, returns {@link TileCover#EMPTY_COVER} if the cover was not 
 	 * {@link TileCover#isDiggable() diggable} or if there was no cover
