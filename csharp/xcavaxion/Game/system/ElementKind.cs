@@ -19,7 +19,7 @@ namespace system {
 			LEAD    = new ElementKind("Lead", 	"toxic and malliable", 							"Pb", 	3, 30, 	4, 	11340),
 			COPPER  = new ElementKind("Copper", 	"conductive, shiny, and easily tarnishes", 		"Cu", 	3, 35, 	3, 	8960),
 			IRON    = new ElementKind("Iron", 	"strong, magnetic, and malliable", 				"Fe", 	2, 25, 	4, 	7870),
-		CARBON  = new ElementKind("Carbon", 	"forms strong bonds, useful in many forms", 	"C", 	1, 10, 	5, 	2000);
+			CARBON  = new ElementKind("Carbon", 	"forms strong bonds, useful in many forms", 	"C", 	1, 10, 	5, 	2000);
 
 		private readonly String name, description, symbol;
 		private readonly int elementDifficulty, valueByWeight, relativePrevalence, density;

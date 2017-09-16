@@ -53,6 +53,7 @@
     <Compile Include="Environment\Tile.cs" />
     <Compile Include="Environment\TileCover.cs" />
     <Compile Include="Main\CodeNuggetNotes.cs" />
+    <Compile Include="Util\Optional.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -60,5 +61,6 @@
     <Folder Include="Main\" />
     <Folder Include="Player\" />
     <Folder Include="Environment\" />
+    <Folder Include="Util\" />
   </ItemGroup>
 </Project>

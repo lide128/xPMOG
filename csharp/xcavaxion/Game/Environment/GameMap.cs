@@ -1,7 +1,6 @@
 using System;
 
 using Player.Player;
-using Environment.Tile.TileOccupiedException;
 
 namespace Environment {
 
@@ -52,7 +51,7 @@ public class GameMap {
 			gameMap[coordinates.x][coordinates.y] = toAssign;
 		}
 
-		/**
+	/**
 	 * @param player to be moved
 	 * @param direction to move in, for a distance of one {@link Tile}
 	 * @return {@code true} if the player was successfully moved,
@@ -73,7 +72,7 @@ public class GameMap {
 		//		movePlayer(player, getTile(newPoint));
 		//	}
 
-		/**
+	/**
 	 * @param player to be moved
 	 * @param tile to move to
 	 * @return {@code true} if the player was successfully moved,
@@ -105,7 +104,7 @@ public class GameMap {
 			return true;
 		}
 
-		/**
+	/**
 	 * @return the tile that is adjacent to the given tile in the given direction
 	 * @throws TileNotFoundException
 	 */

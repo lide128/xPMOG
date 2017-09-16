@@ -13,15 +13,14 @@ namespace Main {
 			}
 		}
 		
-		public static enum CodeNugget {
-			MoveForward(RobotMover::moveRobotForward),
-			Dig(RobotMover::dig),
-			TurnLeft(RobotMover::turnLeft),
-			TurnRight(RobotMover::turnRight),
-			InventoryFull(RobotMover::isInventoryFull),
-			HasElement(RobotMover::hasElement),
-			GoHome(RobotMover::goHome),
-			;
+		public static class CodeNugget {
+			MoveForward(RobotMover::moveRobotForward)
+			Dig(RobotMover::dig)
+			TurnLeft(RobotMover::turnLeft)
+			TurnRight(RobotMover::turnRight)
+			InventoryFull(RobotMover::isInventoryFull)
+			HasElement(RobotMover::hasElement)
+			GoHome(RobotMover::goHome)
 			
 			BiPredicate<Robot, Object> func;
 			

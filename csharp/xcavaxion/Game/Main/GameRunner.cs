@@ -11,7 +11,7 @@ namespace Main {
 	public class GameRunner {
 
 
-		public static void main(String[] args) throws Exception {
+		public static void main(String[] args) {
 
 			// GENERATE TEAMS
 			List<Team> teams = new ArrayList<>();

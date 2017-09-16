@@ -44,20 +44,18 @@ namespace Player {
 			
 		}
 		
-		public class AdjacentAction implements Action {
+		public class AdjacentAction : Action {
 			// move or dig adjacent
 			// construct building adjacent
-			
-			private readonly Direction direction; 
+
+			private Direction direction { get; } 
 			
 			public AdjacentAction(Direction direction) {
 				this.direction = direction;
 			}
-			
-			public Direction getDirection() { return direction; }
 		}
 		
-		public class HereAction implements Action {
+		public class HereAction : Action {
 			// turn?
 			// get GameObject from here
 			// get all from here
@@ -67,10 +65,10 @@ namespace Player {
 			// bury GameObject here
 		}
 		
-		public class PickUpAllAction extends HereAction {
+		public class PickUpAllAction : HereAction {
 		}
 		
-		public static class DepositAllAction extends HereAction {
+		public static class DepositAllAction : HereAction {
 		}
 		
 	}

@@ -1,6 +1,7 @@
 using System;
 
 using system;
+using Util;
 
 namespace Player {
 
@@ -50,8 +51,8 @@ namespace Player {
 		}
 
 		/** @return an {@code Optional} which contains the GameObject that did not fit into this inventory */
-		Optional<? extends GameObject> add(GameObject obj) {
-			if (obj instanceof GameElement)
+		Optional<? : GameObject> add(GameObject obj) {
+			if (obj is GameElement)
 				return addAndSpillOver((GameElement) obj);
 			if (inventory.getTotalWeight() + obj.getWeight() > maxWeight 
 				|| inventory.getTotalVolume() + obj.getVolume() > maxVolume)
@@ -62,7 +63,7 @@ namespace Player {
 
 		Optional<GameObjectList> addAll(GameObjectList objects) {
 			while (!objects.isEmpty()) {
-				Optional<? extends GameObject> added = add(objects.remove(0));
+				Optional<? : GameObject> added = add(objects.remove(0));
 				if (added.isPresent()){
 					objects.add(added.get());
 					return Optional.of(objects);
