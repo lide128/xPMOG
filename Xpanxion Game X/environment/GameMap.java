@@ -4,6 +4,7 @@ import java.awt.Point;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Random;
 import java.util.Set;
 
 import player.Player;
@@ -21,13 +22,14 @@ public class GameMap {
 	int mapY;
 	Tile[][] gameMap;
 	private Map<Player, Tile> playerLocations;
-	
+	private Map<Structure, Tile> structureLocations;
 
 	public GameMap(int x, int y) {
 		mapX = x;
 		mapY = y;
 		gameMap = new Tile[mapX][mapY];
 		playerLocations = new HashMap<>();
+		structureLocations = new HashMap<>();
 	}
 	
 	public Set<Point> corners() {
@@ -39,12 +41,16 @@ public class GameMap {
 		return corners;
 	}
 	
+	public Tile getTile(Point coordinates) {
+		return gameMap[coordinates.x][coordinates.y];
+	}
+	
 	public Tile getLocation(Player player) {
 		return playerLocations.get(player);
 	}
 	
-	public Tile getTile(Point coordinates) {
-		return gameMap[coordinates.x][coordinates.y];
+	public Tile getLocation(Structure structure) {
+		return structureLocations.get(structure);
 	}
 	
 	void assignTile(Tile toAssign, Point coordinates) {
@@ -58,7 +64,14 @@ public class GameMap {
 	 * or {@code false} if the adjacent tile was not {@link TileCover#isTraversible() traversible} 
 	 */
 	public boolean movePlayer(Player player, Direction direction) {
-		return movePlayer(player, translate(getLocation(player), direction));
+		boolean pass = false;
+		try {
+			pass = movePlayer(player, translate(getLocation(player), direction));
+		} catch (ArrayIndexOutOfBoundsException | TileNotFoundException e) {
+//			System.out.println("Can't move off the map!");
+			// do nothing, return false
+		}
+		return pass;
 	}
 	
 //	void movePlayer(Player player, Point newPoint) throws TileOccupiedException {
@@ -83,15 +96,34 @@ public class GameMap {
 		return true;
 	}
 	
+	public TileCover digCover(Tile tile) {
+		return tile.digCover();
+	}
+	
+	boolean placeStructure(Structure structure, Tile tile) {
+		try {
+			tile.addCover(structure);
+		} catch (TileOccupiedException e) {
+			return false;
+		}
+		structureLocations.put(structure, tile);
+		return true;
+	}
+	
 	/**
 	 * @return the tile that is adjacent to the given tile in the given direction
+	 * @throws TileNotFoundException 
 	 */
-	public Tile translate(Tile tile, Direction direction) {
+	public Tile translate(Tile tile, Direction direction) throws TileNotFoundException {
 		return translate(tile, direction, 1);
 	}
 	
-	public Tile translate(Tile tile, Direction direction, int distance) {
-		return getTile(translate(tile.getCoordinates(), direction, distance));
+	public Tile translate(Tile tile, Direction direction, int distance) throws TileNotFoundException {
+		try {
+			return getTile(translate(tile.getCoordinates(), direction, distance));
+		} catch (ArrayIndexOutOfBoundsException e) {
+			throw new TileNotFoundException(e);
+		}
 	}
 	
 //	private static Point translate(Point point, Direction direction) {
@@ -204,6 +236,41 @@ public class GameMap {
 		private Direction(int dx, int dy) {
 			this.dx = dx;
 			this.dy = dy;
+		}
+		
+		public static Direction random(Random rand) {
+			Direction[] directions = Direction.values();
+			return directions[rand.nextInt(directions.length)];
+		}
+
+		/**
+		 * Crude pathing
+		 * 
+		 * @param distance a Point representing a destination's relation to an origin
+		 * @return the {@code Direction} most representative of the distance to cover or {@code null} for (0,0)
+		 */
+		public static Direction onto(Point distance) {
+			int x = distance.x;
+			int y = distance.y;
+			
+			if (x == 0 && y == 0)
+				return null;
+			
+			if (Math.abs(x) >= Math.abs(y))
+				return x < 0 ? LEFT : RIGHT;
+			else
+				return y < 0 ? DOWN : UP;
+		}
+	}
+	
+	public class TileNotFoundException extends Exception {
+		private static final long serialVersionUID = 8626777410520409827L;
+
+		private TileNotFoundException() {
+			super("Tile not found!");
+		}
+		private TileNotFoundException(Throwable t) {
+			super("Tile not found!", t);
 		}
 	}
 	

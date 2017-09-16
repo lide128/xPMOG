@@ -17,10 +17,12 @@ public class Inventory {
 	public Inventory() {
 		this.currentMoney = 0;
 		this.inventory = new GameObjectList();
-		// Set max weight to hold at least one liter of anything: 
-		// kg/m^3 * 1000 g/kg / 1000 liters/m^3 * 1 liter = grams
-		this.maxWeight = ElementKind.heaviestElement().getDensity() * 1;
-		this.maxVolume = 10000; // 10,000 cm^3 = one cubic meter
+		// Set max weight to hold at least one hundred liters of anything: 
+		// kg/m^3 * 1000 g/kg / 1000 liters/m^3 * 100 liter = grams
+		this.maxWeight = ElementKind.heaviestElement().getDensity() * 100;
+//		this.maxWeight = Integer.MAX_VALUE;
+		this.maxVolume = 1000000; // 1,000,000 cm^3 = one cubic meter
+//		this.maxVolume = Integer.MAX_VALUE;
 	}
 	
 	/**
@@ -29,6 +31,14 @@ public class Inventory {
 	 */
 	public int getValue() {
 		return currentMoney() + inventory.getTotalValue();
+	}
+	
+	public boolean isEmpty() {
+		return inventory.isEmpty();
+	}
+
+	public boolean isFull() {
+		return inventory.getTotalWeight() >= maxWeight || inventory.getTotalVolume() >= maxVolume;
 	}
 	
 	int currentMoney() { return currentMoney; }
@@ -55,6 +65,17 @@ public class Inventory {
 		return Optional.empty();
 	}
 	
+	Optional<GameObjectList> addAll(GameObjectList objects) {
+		while (!objects.isEmpty()) {
+			Optional<? extends GameObject> added = add(objects.remove(0));
+			if (added.isPresent()){
+				objects.add(added.get());
+				return Optional.of(objects);
+			}
+		}
+		return Optional.empty();
+	}
+	
 	/** 
 	 * @return an {@code Optional} which contains the GameElement that 
 	 * represents portion of the given element that did not fit into this inventory
@@ -76,5 +97,24 @@ public class Inventory {
 		
 		return spillover;
 	}
+	
+	GameObject removeObject(GameObject obj) throws ObjectNotFoundException {
+		if (!inventory.contains(obj))
+			throw new ObjectNotFoundException();
+		return inventory.get(inventory.indexOf(obj));
+	}
+	
+	GameObjectList removeAllObjects() {
+		GameObjectList oldObjects = inventory;
+		inventory = new GameObjectList();
+		return oldObjects;
+	}
+
+	public static class ObjectNotFoundException extends Exception {
+		public ObjectNotFoundException() {
+			super("Object not found!");
+		}
+	}
+
 	
 }

@@ -1,6 +1,8 @@
 package system;
 
 import java.util.ArrayList;
+import java.util.Optional;
+import java.util.function.BinaryOperator;
 
 public class GameObjectList extends ArrayList<GameObject>{
 
@@ -71,6 +73,15 @@ public class GameObjectList extends ArrayList<GameObject>{
 	
 	public int getTotalValue() {
 		return stream().mapToInt(GameObject::getValue).sum();
+	}
+	
+	public Optional<GameObject> mostValuableObject() {
+		BinaryOperator<GameObject> bestFinder = new BinaryOperator<GameObject>() {
+			@Override
+			public GameObject apply(GameObject t, GameObject u) {
+				return u.getValue() > t.getValue() ? u : t;
+			}};
+		return stream().reduce(bestFinder);
 	}
 
 }
