@@ -66,7 +66,7 @@ public class InventoryManager : MonoBehaviour {
 		return elementContained;
 	}
 
-	//this does work, now handling element inventory max, not handling partial amounts
+	//this does work, now handling element inventory max, partial amount handled in PartialElementAdd
 	public bool AddElementContainerToInventory(ElementContainer elementContainerToAdd){
 		bool successfullyAdded = false;
 		string toAddName = elementContainerToAdd.contents.name;
@@ -103,6 +103,17 @@ public class InventoryManager : MonoBehaviour {
 		}
 		return successfullyAdded;
 	}
+
+	//Add part of the volume of an element container to the players inventory if there is not enough room for the whole
+	public void PartialElementAdd(ElementContainer elementToDivide){
+		int difference = elementVolumeCapacity - currentTotalElementVolume;
+		string elementName = elementToDivide.contents.name;
+		ElementContainer whatWillFit = new ElementContainer (elementToDivide.contents, difference);
+		AddElementContainerToInventory (whatWillFit); //add what will fit to the inventory
+		elementToDivide.volume -= difference; //remove the amount from the element container
+		Debug.Log ("Added " + difference + " of " + elementName + " to player inventory. ElementBox still contains " + elementToDivide.volume + " of " + elementName + ".");
+	}
+
 
 	//returns true if there is volume overflow when adding elements to inventory
 	public bool CheckForVolumeOverflow(int volumeToAdd){

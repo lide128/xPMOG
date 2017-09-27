@@ -15,6 +15,11 @@ public class ElementContainer {
 		Debug.Log ("new element container volume: " + volume);
 	}
 
+	public ElementContainer(Elements contents, int volume){
+		this.contents = contents;
+		this.volume = volume;
+	}
+
 	//TODO I don't think this is used anywhere, may need to be removed
 	public void AddElementToContainer(Elements toAdd, int amountToAdd){
 		contents = toAdd;

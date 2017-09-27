@@ -58,7 +58,11 @@ public class PlayerController : MonoBehaviour {
 			bool elementsAdded = inventory.GetComponent<InventoryManager> ().AddElementContainerToInventory (temp);
 			if(elementsAdded){
 				Destroy (collision2d.gameObject); //remove the ElementBox after contents absorbed
-				//conditional, don't destroy? Only take the volume that there is space for?
+			}
+			else if(!elementsAdded){
+				//if we can't add all try adding part of the contain
+				inventory.GetComponent<InventoryManager> ().PartialElementAdd (temp);
+				//don't destroy the container
 			}
 			else{
 				//if unable to add elements, display message

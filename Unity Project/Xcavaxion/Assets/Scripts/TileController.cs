@@ -32,7 +32,6 @@ public class TileController : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
        
-		System.Random rand = new System.Random();
 		rend = GetComponent<SpriteRenderer> ();
 		tileName = gameObject.name;
 		minedBoulder = false;

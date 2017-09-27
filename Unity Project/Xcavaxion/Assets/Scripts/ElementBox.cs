@@ -34,7 +34,11 @@ public class ElementBox : MonoBehaviour {
 	//this has no affect yet, don't know why
 	void OnMouseEnter(){
 		Debug.Log ("Element Container mouse over!");
-		rend.material.color = Color.red;
+		rend.material.color = Color.green;
+	}
+
+	void OnMouseExit(){
+		rend.material.color = Color.white; //restores tile color
 	}
 
 
