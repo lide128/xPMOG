@@ -8,9 +8,9 @@ public class TileController : MonoBehaviour {
 	public Renderer rend;
 
 	public bool minedBoulder;
-	public bool hasItems;
-	public bool hasElements;
-	public bool hasCodeNuggets;
+	public bool hasBuriedItems;
+	public bool hasBuriedElements;
+	public bool hasBuriedCodeNuggets;
 
 	public int elementFrequency; //scale of 1 to 100, 100 being alot of elements?
 	private int groundTilePrefabCount = 5; //the number of different ground tile prefabs available
@@ -20,6 +20,7 @@ public class TileController : MonoBehaviour {
     private string buffer = "BufferTile";
     private string border = "BorderTile";
     private string ground = "GroundTile";
+	private string baseTile = "Base";
 	private string prefabsPath = "Prefabs/";
 
 	private List<Vector2> itemSpawnPoints;
@@ -30,41 +31,41 @@ public class TileController : MonoBehaviour {
 
 
 	// Use this for initialization
-	void Start () {
+	public virtual void Start () {
        
 		rend = GetComponent<SpriteRenderer> ();
 		tileName = gameObject.name;
 		minedBoulder = false;
-		hasItems = false;
-		hasElements = false;
-		hasCodeNuggets = false;
+		hasBuriedItems = false;
+		hasBuriedElements = false;
+		hasBuriedCodeNuggets = false;
 
 		if(tileName.Contains(boulder)){
-			hasElements = true;
+			hasBuriedElements = true;
 		}
 
-		if(hasItems || hasElements || hasCodeNuggets){
+		if(hasBuriedItems || hasBuriedElements || hasBuriedCodeNuggets){
 
 			//because this tile has items, elements, or code nuggets, create the tileItem object
 			tileItems = new TileItemManager();
 			//and get the item spawn point list
 			itemSpawnPoints = tileItems.tileItemSpawnPoints;
 
-			if(hasItems){
+			if(hasBuriedItems){
 				Debug.Log ("Added items to tile");
 			}
-			if (hasElements) {
+			if (hasBuriedElements) {
 				AddElementsToTile ();
 			}
-			if(hasCodeNuggets){
+			if(hasBuriedCodeNuggets){
 				Debug.Log ("Added code nuggets to tile");
 			}
 		}
 	}
 
-	void Update() {
+	public virtual void Update() {
 
-		if(tileName.Contains(boulder) && minedBoulder){
+		if(tileName.Contains(boulder) && minedBoulder){ //this handles the self destruction of a boulder tile and creation of a tile to replace it
 			List<ElementContainer> temp = new List<ElementContainer> (); //buffer to copy the tile element contents into
 			temp = tileItems.buriedElements;
 
@@ -73,7 +74,7 @@ public class TileController : MonoBehaviour {
 
 			CreateRandomGroundTile();
 
-			if(hasElements){
+			if(hasBuriedElements){
 
 				ReleaseBoulderElements (temp, itemSpawnPoints);
 
@@ -89,7 +90,7 @@ public class TileController : MonoBehaviour {
 		//this leaves things in the game scene and is not cleaned upon end
 	}
 
-	void OnCollisionEnter2D(Collision2D collision){
+	public virtual void OnCollisionEnter2D(Collision2D collision){
 		Debug.Log ("tile collision occurred");
 
 		//TODO this needs to be changed, mining a boulder will be more of a process than just running in to it
@@ -105,7 +106,7 @@ public class TileController : MonoBehaviour {
 	}
 
 	void OnMouseOver(){
-		Debug.Log ("Mouse over");
+//		Debug.Log ("Mouse over");
 		if(tileName.Contains(ground) || tileName.Contains(boulder)){ //only highlight ground or boulder tiles
 			rend.material.color = new Color(0.95f, 0, 0, 0.8f);
 

@@ -31,10 +31,9 @@ public class ElementBox : MonoBehaviour {
 	}
 
 	//TODO want to be able to highlight element boxes to see details in the UI about their contents
-	//this has no affect yet, don't know why
 	void OnMouseEnter(){
 		Debug.Log ("Element Container mouse over!");
-		rend.material.color = Color.green;
+		rend.material.color = Color.red;
 	}
 
 	void OnMouseExit(){

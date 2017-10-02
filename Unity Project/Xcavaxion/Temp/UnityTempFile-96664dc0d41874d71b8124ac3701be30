@@ -111,6 +111,7 @@
 'Assets/PixelPerfectCamera/Scripts/PixelPerfectCamera.cs'
 'Assets/PixelPerfectCamera/Scripts/PixelSnap.cs'
 'Assets/PixelPerfectCamera/Scripts/Scroller.cs'
+'Assets/Scripts/BaseController.cs'
 'Assets/Scripts/CameraController.cs'
 'Assets/Scripts/ElementBox.cs'
 'Assets/Scripts/ElementContainer.cs'

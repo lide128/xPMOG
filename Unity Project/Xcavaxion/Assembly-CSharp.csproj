@@ -64,6 +64,7 @@
      <Compile Include="Assets\PixelPerfectCamera\Scripts\PixelPerfectCamera.cs" />
      <Compile Include="Assets\PixelPerfectCamera\Scripts\PixelSnap.cs" />
      <Compile Include="Assets\PixelPerfectCamera\Scripts\Scroller.cs" />
+     <Compile Include="Assets\Scripts\BaseController.cs" />
      <Compile Include="Assets\Scripts\CameraController.cs" />
      <Compile Include="Assets\Scripts\ElementBox.cs" />
      <Compile Include="Assets\Scripts\ElementContainer.cs" />
@@ -71,6 +72,7 @@
      <Compile Include="Assets\Scripts\GameItemManager.cs" />
      <Compile Include="Assets\Scripts\GameItems.cs" />
      <Compile Include="Assets\Scripts\GameSetupParameters.cs" />
+     <Compile Include="Assets\Scripts\Inventory.cs" />
      <Compile Include="Assets\Scripts\InventoryManager.cs" />
      <Compile Include="Assets\Scripts\MapController.cs" />
      <Compile Include="Assets\Scripts\MenuController.cs" />
