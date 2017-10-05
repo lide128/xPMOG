@@ -7,6 +7,7 @@ using NUnit.Framework;
 public class Inventory {
 
 	//A class representing an inventory object that can be used by players, devices, vehicles, bases, tc.
+	//TODO and to and from identifiers to screen messages
 
 	public int totalCurrency;
 
@@ -22,6 +23,8 @@ public class Inventory {
 	public int elementVolumeCapacity;
 	public int currentTotalElementVolume;
 
+	public GameObject messages;
+
 
 	public Inventory(bool elementLimit, int elementCapacity){
 		this.elementVolumeLimit = elementLimit;
@@ -32,6 +35,12 @@ public class Inventory {
 		codeNuggetInventory = new List<string> ();
 
 		elementsUpdated = false;
+
+		messages = GameObject.FindGameObjectWithTag ("Messages");
+	}
+
+	public void SendMessage(string message){
+		messages.GetComponent<UIMessageHandler> ().CreateMessage (message, "Player");
 	}
 
 	public List<string> GetElementNames(){
@@ -173,10 +182,12 @@ public class Inventory {
 					cont.volume += volumeToAdd; //add the amount to preexisting element container
 					currentTotalElementVolume += volumeToAdd;
 					successfullyAdded = true;
-					Debug.Log ("Added " + volumeToAdd + " of " + elementName + " to preexisting element container in player inventory.");
+//					Debug.Log ("Added " + volumeToAdd + " of " + elementName + " to preexisting element container in player inventory.");
+					SendMessage("Added " + volumeToAdd + " " + elementName + " to preexisting element container in inventory.");
 				}
 				else{
-					Debug.Log ("Could not add " + volumeToAdd + " of " + elementName + " to presixitng inventory because of overflow.");
+//					Debug.Log ("Could not add " + volumeToAdd + " of " + elementName + " to presixitng inventory because of overflow.");
+//					SendMessage("Could not add " + volumeToAdd + " of " + elementName + " to presixitng inventory because of overflow.");
 				}
 			}
 		}
@@ -195,7 +206,8 @@ public class Inventory {
 			if(!CheckForVolumeOverflow(volumeToAdd)){
 				elementsInventory.Add (elementContainerToAdd);
 				currentTotalElementVolume += volumeToAdd;
-				Debug.Log ("Added element container of: " + volumeToAdd + " " + toAddName + " to the player inventory elements");
+//				Debug.Log ("Added element container of: " + volumeToAdd + " " + toAddName + " to the player inventory elements");
+				SendMessage("Added element container of: " + volumeToAdd + " " + toAddName + " to the inventory elements");
 				successfullyAdded = true;
 			}
 		}
@@ -212,10 +224,12 @@ public class Inventory {
 		if(difference > 0){
 			successfullyAdded = AddElementContainerToInventory (whatWillFit); //add what will fit to the inventory
 			elementToDivide.volume -= difference; //remove the amount from the element container
-			Debug.Log ("Added " + difference + " of " + elementName + " to player inventory. ElementBox still contains " + elementToDivide.volume + " of " + elementName + ".");
+//			Debug.Log ("Added " + difference + " of " + elementName + " to player inventory. ElementBox still contains " + elementToDivide.volume + " of " + elementName + ".");
+			SendMessage("Element box still contains " + elementToDivide.volume + " of " + elementName + ".");
 		}
 		else{
-			Debug.Log("Could not add any partial amount of " + elementName + " to the inventory.");
+//			Debug.Log("Could not add any partial amount of " + elementName + " to the inventory.");
+			SendMessage("Could not add any partial amount of " + elementName + " to the inventory.");
 		}
 		return successfullyAdded;
 	}
@@ -224,6 +238,7 @@ public class Inventory {
 		foreach(ElementContainer cont in toAdd){
 			AddElementContainerToInventory (cont);
 		}
+		SendMessage ("Transfered: " + toAdd.Count + " containers of elements to other inventory.");
 	}
 
 	//Use to trade between players? Dump elements at base, or into strucutres?
@@ -261,7 +276,8 @@ public class Inventory {
 		recipientContainer.volume += volToGive;
 		toGive.volume -= volToGive;
 		elementsUpdated = true;
-		Debug.Log ("Gave " + volToGive + " " + nameToGive + " to another element container.");
+//		Debug.Log ("Gave " + volToGive + " " + nameToGive + " to another element container.");
+		SendMessage("Gave " + volToGive + " " + nameToGive + " to another element container.");
 	}
 
 	//Finds element container by name within the list, if not found returns null

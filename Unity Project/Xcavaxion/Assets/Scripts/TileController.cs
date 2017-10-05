@@ -29,6 +29,7 @@ public class TileController : MonoBehaviour {
 
 	public Vector2 tileCoordinates; //this is the position data of the game screen
 
+	public UIMessageHandler messages;
 
 	// Use this for initialization
 	public virtual void Start () {
@@ -157,7 +158,7 @@ public class TileController : MonoBehaviour {
 			float newX = tilePos.position.x + newItemPos.x;
 			float newY = tilePos.position.y + newItemPos.y;
 			newBox.transform.Translate (new Vector3 (newX, newY, 0.0f)); //move the box to the item spawn point
-			newBox.transform.localScale = new Vector3(0.4f, 0.4f, 0f); //scale down the element boxes by a 4th
+			newBox.transform.localScale = new Vector3(0.4f, 0.4f, 0.0f); //scale down the element boxes by a 4th
 
 			newBox.GetComponent<ElementBox>().container = ele; //transfer tile single tile element container to new box
 

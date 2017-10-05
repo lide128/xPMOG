@@ -64,6 +64,7 @@
      <Compile Include="Assets\PixelPerfectCamera\Scripts\PixelPerfectCamera.cs" />
      <Compile Include="Assets\PixelPerfectCamera\Scripts\PixelSnap.cs" />
      <Compile Include="Assets\PixelPerfectCamera\Scripts\Scroller.cs" />
+     <Compile Include="Assets\Scripts\ActionMessage.cs" />
      <Compile Include="Assets\Scripts\BaseController.cs" />
      <Compile Include="Assets\Scripts\CameraController.cs" />
      <Compile Include="Assets\Scripts\ElementBox.cs" />
@@ -80,6 +81,8 @@
      <Compile Include="Assets\Scripts\PlayerStartPoint.cs" />
      <Compile Include="Assets\Scripts\TileController.cs" />
      <Compile Include="Assets\Scripts\TileItemManager.cs" />
+     <Compile Include="Assets\Scripts\UIManager.cs" />
+     <Compile Include="Assets\Scripts\UIMessageHandler.cs" />
      <None Include="Assets\PixelPerfectCamera\background_art_license.txt" />
      <None Include="Assets\PixelPerfectCamera\README.txt" />
  <Reference Include="UnityEngine.UI">

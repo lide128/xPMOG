@@ -19,7 +19,7 @@ public class MapController : MonoBehaviour {
 	public int screenBuffer;
 	public float tileScale;
 
-	public int chanceOfBoulderTile;
+	public int chanceOfBoulderTile; // 0 to 100 percent
 
 	private string borderTile = "BorderTile";
 	private string bufferTile = "BufferTile";
@@ -129,7 +129,7 @@ public class MapController : MonoBehaviour {
 				tileCoords.y = transformY;
 
 				var temp = Instantiate (_gameMap [x, y]) as GameObject;
-				temp.transform.position = new Vector3 (transformX, transformY, 0f);
+				temp.transform.position = new Vector3 (transformX, transformY, 0.0f);
 
 				//give the tile information about it's position on the screen
 				tileCont = temp.GetComponent<TileController> ();
@@ -250,34 +250,33 @@ public class MapController : MonoBehaviour {
 	private void CreateOnGroundObjects(){
 		GameObject baseTile = FindGameObjectWithName (TileTypes, genericBase);
 		GameObject boulder = FindGameObjectWithName (TileTypes, boulderTile);
+		bool alreadyCovered = false;
+		System.Random rand = new System.Random ();
 
-		for(var y = 0; y <  MapSize.y - 1; y++){
-			for (var x = 0; x < MapSize.x - 1; x++) {
-				if(x == 3 && y == 3){
-					_gameMap [x + screenBuffer, y + screenBuffer] = boulder; //temp, make a boulder at 3, 3
-				}
-				if(x == 4 && y == 5){
-					_gameMap [x + screenBuffer, y + screenBuffer] = boulder; //temp, make a boulder at 4, 5
-				}
+		for(var y = screenBuffer; y <  PlayableMapSize.y + screenBuffer - 1; y++){
+			for (var x = screenBuffer; x < PlayableMapSize.x + screenBuffer - 1; x++) {
+				int newNum = rand.Next (1, 101);
 
 				//check for bases, placed at corners with generic base for now
 				if(CheckBaseCorners(x, y) != ""){
 					_gameMap [x, y] = baseTile; //temp
+					alreadyCovered = true;
 				}
+				//fill map with boulders based on chance of boulder percent
+				else if(BoulderChance(newNum)){
+					_gameMap [x, y] = boulder;
+				}
+				alreadyCovered = false;
+
 			}
 		}
 	}
 
-//	private void CreateBoulders(){
-//		GameObject boulder = FindGameObjectWithName (TileTypes, boulderTile);
-//		for(var y = 0; y <  PlayableMapSize.y - 1; y++){
-//			for (var x = 0; x < PlayableMapSize.x - 1; x++) {
-//				if(x == 3 && y == 3){
-//					_gameMap [x + screenBuffer, y + screenBuffer] = boulder;
-//				}
-//			}
-//		}
-//	}
+	public bool BoulderChance(int randoNum){
+
+		return randoNum <= chanceOfBoulderTile;
+	}
+		
 		
 	// Update is called once per frame
 	void Update () {

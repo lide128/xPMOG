@@ -7,6 +7,8 @@ using System.Net.Sockets;
 
 public class PlayerController : MonoBehaviour {
 
+	public string playerIdentifier;
+
 	public float playerSpeed;
 
 	public Renderer rend;
@@ -14,9 +16,11 @@ public class PlayerController : MonoBehaviour {
 	private Rigidbody2D playerRigidBody;
 	private BoxCollider2D playerCollider2d;
 
-	public GameObject inventory; //inventory cannot be InventoryManager class because it is a monobehaviour
+	public InventoryManager inventory; //inventory cannot be InventoryManager class because it is a monobehaviour
 
 	public bool playerMoving;
+
+	public UIMessageHandler messages;
 
 	// Use this for initialization
 	void Start () {
@@ -74,8 +78,8 @@ public class PlayerController : MonoBehaviour {
 			else{
 				//if unable to add elements, display message
 				//this should be an in game UI message
-				Debug.Log("Could not add " + temp.volume + " " + temp.contents.name + " to player inventory, because amount exceeds carrying capacity.");
-
+//				Debug.Log("Could not add " + temp.volume + " " + temp.contents.name + " to player inventory, because amount exceeds carrying capacity.");
+				messages.CreateMessage ("Could not add " + temp.volume + " " + temp.contents.name + " to player inventory, because amount exceeds carrying capacity.", playerIdentifier);
 			}
 
 		}
@@ -94,10 +98,10 @@ public class PlayerController : MonoBehaviour {
 
 			//Handle the depositing of items, giving all of them automatically right now
 			//This is the base adding all of a copy of the players elements to it's inventory
-			List<ElementContainer> playerElements = inventory.gameObject.GetComponent<InventoryManager>().playerInventory.elementsInventory;
-			other.gameObject.GetComponent<BaseController> ().baseInventory.AddListOfElementContainer (playerElements);
+			other.gameObject.GetComponent<BaseController> ().baseInventory.AddListOfElementContainer (
+				inventory.playerInventory.elementsInventory);
 			other.gameObject.GetComponent<BaseController> ().baseInventory.elementsUpdated = true;
-			inventory.gameObject.GetComponent<InventoryManager> ().playerInventory.ClearInventory ();
+			inventory.playerInventory.ClearInventory ();
 		}
 	}
 
