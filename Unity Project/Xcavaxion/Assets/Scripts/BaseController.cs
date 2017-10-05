@@ -60,10 +60,17 @@ public class BaseController : TileController {
 		}
 
 	}
-
-
+		
 	public static string FirstCharToUpper(string input){
 		return input.Substring (0, 1).ToUpper () + input.Substring (1);
+	}
+
+	void OnMouseOver(){
+		rend.material.color = new Color(0.95f, 0, 0, 0.8f);
+	}
+
+	void OnMouseExit(){
+		rend.material.color = Color.white; //restores tile color
 	}
 
 

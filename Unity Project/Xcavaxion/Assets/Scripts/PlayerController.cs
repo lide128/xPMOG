@@ -114,5 +114,13 @@ public class PlayerController : MonoBehaviour {
 			transform.position = currentPos;
 		}
 	}
+
+	void OnMouseOver(){
+		rend.material.color = new Color(0.95f, 0, 0, 0.8f);
+	}
+
+	void OnMouseExit(){
+		rend.material.color = Color.white; //restores tile color
+	}
 		
 }

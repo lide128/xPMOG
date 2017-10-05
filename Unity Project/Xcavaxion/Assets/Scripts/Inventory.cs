@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 using NUnit.Framework;
+using System.Security.Policy;
 
 public class Inventory {
 
@@ -238,7 +239,19 @@ public class Inventory {
 		foreach(ElementContainer cont in toAdd){
 			AddElementContainerToInventory (cont);
 		}
-		SendMessage ("Transfered: " + toAdd.Count + " containers of elements to other inventory.");
+		int numberOfContainers = toAdd.Count;
+		if(numberOfContainers != 0){
+			SendMessage ("Transfered: " + numberOfContainers + " " + Plurality("container", numberOfContainers) + " of elements to other inventory.");
+		}
+	}
+
+	public string Plurality(string baseWord, int number){
+		if(number > 1){
+			return baseWord + "s";
+		}
+		else{
+			return baseWord;
+		}
 	}
 
 	//Use to trade between players? Dump elements at base, or into strucutres?
