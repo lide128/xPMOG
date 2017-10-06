@@ -184,7 +184,7 @@ public class Inventory {
 					currentTotalElementVolume += volumeToAdd;
 					successfullyAdded = true;
 //					Debug.Log ("Added " + volumeToAdd + " of " + elementName + " to preexisting element container in player inventory.");
-					SendMessage("Added " + volumeToAdd + " " + elementName + " to preexisting element container in inventory.");
+					SendMessage("Added " + volumeToAdd + " " + elementName.ToUpper() + " to preexisting element container in inventory.");
 				}
 				else{
 //					Debug.Log ("Could not add " + volumeToAdd + " of " + elementName + " to presixitng inventory because of overflow.");
@@ -208,7 +208,7 @@ public class Inventory {
 				elementsInventory.Add (elementContainerToAdd);
 				currentTotalElementVolume += volumeToAdd;
 //				Debug.Log ("Added element container of: " + volumeToAdd + " " + toAddName + " to the player inventory elements");
-				SendMessage("Added element container of: " + volumeToAdd + " " + toAddName + " to the inventory elements");
+				SendMessage("Added element container of: " + volumeToAdd + " " + toAddName.ToUpper() + " to the inventory elements");
 				successfullyAdded = true;
 			}
 		}
@@ -226,11 +226,11 @@ public class Inventory {
 			successfullyAdded = AddElementContainerToInventory (whatWillFit); //add what will fit to the inventory
 			elementToDivide.volume -= difference; //remove the amount from the element container
 //			Debug.Log ("Added " + difference + " of " + elementName + " to player inventory. ElementBox still contains " + elementToDivide.volume + " of " + elementName + ".");
-			SendMessage("Element box still contains " + elementToDivide.volume + " of " + elementName + ".");
+			SendMessage("Element box still contains " + elementToDivide.volume + " of " + elementName.ToUpper() + ".");
 		}
 		else{
 //			Debug.Log("Could not add any partial amount of " + elementName + " to the inventory.");
-			SendMessage("Could not add any partial amount of " + elementName + " to the inventory.");
+			SendMessage("Could not add any partial amount of " + elementName.ToUpper() + " to the inventory.");
 		}
 		return successfullyAdded;
 	}

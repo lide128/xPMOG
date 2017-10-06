@@ -8,12 +8,12 @@ using System.Xml.Linq;
 
 public class MapController : MonoBehaviour {
 
-	public List<GameObject> TileTypes;
+	public List<GameObject> TileTypes; //the set of tile prefabs to be used to make the map, must be added to the map controller game object in the unity inspector
 
-    public int numberOfGroundTiles;
-    public int numberOfBufferTiles;
-	public int numberOfBoulderTiles;
-	public int numberOfEdgeTiles;
+    public int numberOfGroundTiles; 	//currently 5 different playable area ground tiles
+    public int numberOfBufferTiles; 	//currently 6 different buffer ground tiles
+	public int numberOfBoulderTiles; 	//currently 2 different boulders
+	public int numberOfEdgeTiles; 		//currently 3 different tiles for each edge
 
 	private Vector2 MapSize; //full tile map size, including border
 	public Vector2 PlayableMapSize; //just the playable tiles size
@@ -68,7 +68,7 @@ public class MapController : MonoBehaviour {
 	private GameObject[,] CreateMap(){
 
 		GameObject border = FindGameObjectWithName (borderTile);
-		GameObject boulder = FindGameObjectWithName (boulderTile);
+		GameObject boulder = FindGameObjectWithName (boulderTile + "1");
 
 		MapSize.x = PlayableMapSize.x + (screenBuffer * 2);
 		MapSize.y = PlayableMapSize.y + (screenBuffer * 2);
@@ -85,11 +85,15 @@ public class MapController : MonoBehaviour {
 					_map [x, y] = toUse;
 					continue;
 				}
-				//check border tiles
+				//check edge tiles
 				if(OnBorder(x, y)){
 					//check which border axis we are on
 					string axis = DetermineBufferTileAxis (x, y);
 					if(axis.Equals("westEdgeTile")){
+						GameObject toUse = FindGameObjectWithName (GeneratePrefabName (axis, numberOfEdgeTiles));
+						_map [x, y] = toUse;
+					}
+					else if(axis.Equals("southEdgeTile")){
 						GameObject toUse = FindGameObjectWithName (GeneratePrefabName (axis, numberOfEdgeTiles));
 						_map [x, y] = toUse;
 					}
@@ -101,7 +105,14 @@ public class MapController : MonoBehaviour {
 				//check border corners
 				string cornerIdentity = CheckBorderCorners(x, y);
 				if (cornerIdentity != ""){
-					GameObject toUse = FindGameObjectWithName (SWCorner);
+					GameObject toUse = boulder;
+					if(cornerIdentity.Equals(SWCorner)){
+						toUse = FindGameObjectWithName (SWCorner);
+					}
+					if(cornerIdentity.Equals(NWCorner)){
+						toUse = FindGameObjectWithName (NWCorner);
+					}
+				
                     _map [x, y] = toUse;
                     continue;
                 }
@@ -109,8 +120,9 @@ public class MapController : MonoBehaviour {
                 else
                 {
                     //Pick one of the ground tiles to display randomly
-                    int randomGround = rand.Next(numberOfGroundTiles);
-                    GameObject toUse = FindGameObjectWithName(groundTile + (randomGround+1));
+//                    int randomGround = rand.Next(numberOfGroundTiles);
+//                    GameObject toUse = FindGameObjectWithName(groundTile + (randomGround+1));
+					GameObject toUse = FindGameObjectWithName(GeneratePrefabName(groundTile, numberOfBoulderTiles));
                     _map[x, y] = toUse;
                 }
 			}
@@ -149,6 +161,7 @@ public class MapController : MonoBehaviour {
 		System.Random otherRand = new System.Random ();
 		int randomTileNum = otherRand.Next (numTiles);
 		string nameToReturn = tileName + (randomTileNum + 1);
+		Debug.Log ("prefab name: " + nameToReturn);
 		return nameToReturn;
 	}
 
@@ -226,14 +239,6 @@ public class MapController : MonoBehaviour {
 		(yCoord == (screenBuffer - 1) || yCoord == (screenBuffer - 1 + PlayableMapSize.y)) && (xCoord > (screenBuffer - 1) && (xCoord < (screenBuffer - 1) + PlayableMapSize.x));
 	}
 
-//	//determines if an array postion is going to be one of the maps corner tiles
-//	private bool CheckBorderCorners(int xCoord, int yCoord){
-//		return (xCoord == screenBuffer - 1 && yCoord == screenBuffer - 1) ||
-//		(xCoord == (PlayableMapSize.x + screenBuffer)-1 && yCoord == (PlayableMapSize.y + screenBuffer)-1) ||
-//		(xCoord == screenBuffer - 1 && yCoord == (PlayableMapSize.y + screenBuffer)-1) ||
-//		(xCoord == (PlayableMapSize.x + screenBuffer)-1 && yCoord == screenBuffer - 1);
-//	}
-
 	//determines the array position of border corners and which corner they are
 	private string CheckBorderCorners(int xCoord, int yCoord){
 		string returnCorner = ""; //if no match return empty string
@@ -262,7 +267,6 @@ public class MapController : MonoBehaviour {
 	//double for loop on playable map size
 	private void CreateOnGroundObjects(){
 		GameObject baseTile = FindGameObjectWithName (genericBase);
-		GameObject boulder = FindGameObjectWithName (boulderTile);
 		bool alreadyCovered = false;
 		System.Random rand = new System.Random ();
 
@@ -277,6 +281,7 @@ public class MapController : MonoBehaviour {
 				}
 				//fill map with boulders based on chance of boulder percent
 				else if(BoulderChance(newNum)){
+					GameObject boulder = FindGameObjectWithName (GeneratePrefabName(boulderTile, numberOfBoulderTiles));
 					_gameMap [x, y] = boulder;
 				}
 				alreadyCovered = false;

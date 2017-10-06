@@ -37,7 +37,7 @@ public class MenuController : MonoBehaviour {
 	public void chooseTerrain(int terrain){
 		switch (terrain){
 		case 0:
-			terrainChoice = "Test";
+			terrainChoice = "Lunar";
 			break;
 		case 1:
 			terrainChoice = "Martian";

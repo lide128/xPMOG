@@ -9,40 +9,35 @@ public class UIMessageHandler : MonoBehaviour {
 
 	public Queue<ActionMessage> actionMessages; //starting with message 0
 
-	public int messageCount; //number of messages for this session, used on the message as an identifier
+	public int totalMessageCount; //number of messages for this session, used on the message as an identifier
+	public int currentMessageCount; //the number of messages being stored in the queue
 	public int messageLimit; //max number of message to keep in the queue just so it doesn't bog down, maintain message number though
-
-//	public bool newMessage; //whether or not a new message has been added to the queue
 
 
 	// Use this for initialization
 	void Start () {
-		messageCount = 0;
-//		newMessage = false;
-
+		totalMessageCount = 0;
 		actionMessages = new Queue<ActionMessage> ();
 	}
 	
 	// Update is called once per frame
 	void Update () {
 
+		currentMessageCount = actionMessages.Count;
 
-
-		if(actionMessages.Count == messageLimit){ //if we reach the message limit clear the messages out
+		if(currentMessageCount >= messageLimit){ //if we reach the message limit clear the messages out
 			actionMessages.Clear ();
 		}
 
-//		newMessage = false;
 	}
 
 	public void AddMessage(ActionMessage toAdd){
 		actionMessages.Enqueue (toAdd);
-		messageCount++;
-//		newMessage = true;
+		totalMessageCount++;
 	}
 
 	public void CreateMessage(string messageText, string composer){
-		ActionMessage newMessage = new ActionMessage (messageCount, messageText, composer);
+		ActionMessage newMessage = new ActionMessage (totalMessageCount, messageText, composer);
 		AddMessage (newMessage);
 	}
 
