@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -15,21 +15,24 @@ public class MenuController : MonoBehaviour {
 
 	//int level is the index of the level in the build settings
 	public void LoadScene(){
-		SceneManager.LoadScene (terrainChoice);
-	}
+        //SceneManager.LoadScene (terrainChoice);
+        SceneManager.LoadScene(1);
+    }
 
 	public void chooseMapLength(){
-		InputField lengthInput = this.GetComponent<InputField>();
+        GameObject inputFieldGo = GameObject.Find("LengthInput");
+        InputField lengthInput = inputFieldGo.GetComponent<InputField>();
 
-		mapSizeX = int.Parse (lengthInput.text);
+        this.mapSizeX = int.Parse (lengthInput.text);
 
 		Debug.Log ("mapSizeX: " + mapSizeX);
 	}
 
 	public void chooseMapWidth(){
-		InputField widthInput = this.GetComponent<InputField>();
+        GameObject inputFieldGo = GameObject.Find("LengthInput");
+        InputField widthInput = inputFieldGo.GetComponent<InputField>();
 
-		mapSizeY = int.Parse (widthInput.text);
+        this.mapSizeY = int.Parse (widthInput.text);
 
 		Debug.Log ("mapSizeY: " + mapSizeY);
 	}
@@ -37,7 +40,7 @@ public class MenuController : MonoBehaviour {
 	public void chooseTerrain(int terrain){
 		switch (terrain){
 		case 0:
-			terrainChoice = "Test";
+			terrainChoice = "Lunar";
 			break;
 		case 1:
 			terrainChoice = "Martian";
@@ -54,3 +57,4 @@ public class MenuController : MonoBehaviour {
 		}
 	}
 }
+
