@@ -71,6 +71,7 @@ public class TileController : MonoBehaviour {
 			temp = tileItems.buriedElements;
 
 			Destroy (gameObject); //destroy the boulder tile
+			UpdateBoulderCount(-1); //accesses the map controller and removes one from the boulder count
 			Debug.Log ("Destroyed the boulder tile!");
 
 			CreateRandomGroundTile();
@@ -81,6 +82,16 @@ public class TileController : MonoBehaviour {
 
 			}
 		}
+	}
+
+	public void UpdateBoulderCount (int amount){
+		GameObject mapCont = GameObject.Find ("MapController");
+		mapCont.GetComponent<MapController> ().onScreenBoulderCount += amount;
+	}
+
+	public void UpdateElementBoxCount(int amount){
+		GameObject mapCont = GameObject.Find ("MapController");
+		mapCont.GetComponent<MapController> ().onScreenElementBoxCount += amount;
 	}
 		
 	public void SetCoordinates(Vector2 newCoords){
@@ -107,10 +118,8 @@ public class TileController : MonoBehaviour {
 	}
 
 	void OnMouseOver(){
-//		Debug.Log ("Mouse over");
 		if(tileName.Contains(ground) || tileName.Contains(boulder)){ //only highlight ground or boulder tiles
 			rend.material.color = new Color(0.95f, 0, 0, 0.8f);
-
 		}
 	}
 
@@ -148,7 +157,7 @@ public class TileController : MonoBehaviour {
 		foreach(ElementContainer ele in boulderContents){
 			string nameOfBoxPrefab = prefabsPath + ele.contents.name + "Box";
 			GameObject newBox = (GameObject)Instantiate(Resources.Load(nameOfBoxPrefab));
-
+			UpdateElementBoxCount (1);
 			Transform tilePos = gameObject.transform; //the position in coordinate space of the current tile
 
 			int removeIndex = rand.Next(chosenPoints.Count); //randomly choose spawn point

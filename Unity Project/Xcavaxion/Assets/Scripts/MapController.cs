@@ -22,6 +22,9 @@ public class MapController : MonoBehaviour {
 
 	public int chanceOfBoulderTile; // 0 to 100 percent
 
+	public int onScreenBoulderCount;
+	public int onScreenElementBoxCount;
+
 	private string borderTile = "BorderTile";
 	private string bufferTile = "BufferTile";
 	private string boulderTile = "BoulderTile";
@@ -54,16 +57,16 @@ public class MapController : MonoBehaviour {
 
 	// Use this for initialization
 	public void Start () {
-		
+		onScreenBoulderCount = 0;
+		onScreenElementBoxCount = 0;
+
 		_gameMap = CreateMap();
         
 		CreateOnGroundObjects();
 
         DrawMap();
-
 	}
-
-
+		
 	private GameObject[,] CreateMap(){
 
 		GameObject border = FindGameObjectWithName (borderTile);
@@ -102,8 +105,6 @@ public class MapController : MonoBehaviour {
                 else
                 {
                     //Pick one of the ground tiles to display randomly for the playable game area
-//                    int randomGround = rand.Next(numberOfGroundTiles);
-//                    GameObject toUse = FindGameObjectWithName(groundTile + (randomGround+1));
 					GameObject toUse = FindGameObjectWithName(GeneratePrefabName(groundTile, numberOfBoulderTiles));
                     _map[x, y] = toUse;
                 }
@@ -142,7 +143,6 @@ public class MapController : MonoBehaviour {
 	public string GeneratePrefabName(string tileName, int numTiles){
 		int randomTileNum = rand.Next (numTiles);
 		string nameToReturn = tileName + (randomTileNum + 1);
-		//Debug.Log ("prefab name: " + nameToReturn);
 		return nameToReturn;
 	}
 
@@ -268,6 +268,7 @@ public class MapController : MonoBehaviour {
 				else if(BoulderChance(newNum)){
 					GameObject boulder = FindGameObjectWithName (GeneratePrefabName(boulderTile, numberOfBoulderTiles));
 					_gameMap [x, y] = boulder;
+					onScreenBoulderCount++;
 				}
 				alreadyCovered = false;
 			}
@@ -275,38 +276,12 @@ public class MapController : MonoBehaviour {
 	}
 
 	public bool BoulderChance(int randoNum){
-
 		return randoNum <= chanceOfBoulderTile;
 	}
-		
-		
+				
 	// Update is called once per frame
 	void Update () {
 
-	}
-
-	public string YCoordState(int yCoord){
-		string returnState = "";
-
-		//check buffer
-		if(yCoord < screenBuffer - 1 || yCoord > (screenBuffer + PlayableMapSize.y)){
-			
-		}
-
-		//check edge
-		if((yCoord > (screenBuffer - 1) && (yCoord < (screenBuffer + PlayableMapSize.y))) ||
-			(yCoord == (screenBuffer - 1) || yCoord == (screenBuffer + PlayableMapSize.y))){
-
-		}
-
-		//check corner
-
-		return returnState;
-	}
-
-	public string XCoordState(int xCoord){
-		string returnState = "";
-		return returnState;
 	}
 
 

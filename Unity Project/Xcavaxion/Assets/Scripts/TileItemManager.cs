@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using NUnit.Framework;
+using UnityEditor.VersionControl;
 
 public class TileItemManager {
 
@@ -17,7 +19,7 @@ public class TileItemManager {
 			new Vector2(0.24f, 0.0f), 
 			new Vector2(0.16f, -0.16f), 
 			new Vector2(0.0f, -0.24f), 
-			new Vector2(-0.16f, -0.16f),
+			new Vector2(-0.16f, 0.16f),
 			new Vector2(-0.24f, 0.0f), 
 			new Vector2(-0.16f, -0.16f) };
 
@@ -103,8 +105,11 @@ public class TileItemManager {
 		return tileItemSpawnPoints [rand.Next (pointCount)];
 	}
 
+	//TODO fix so this doesn't duplicate points
 	//returns a list of spawn points of specified size from the list of spawn points, does not duplicate points
+	//passing in spawn points in case I want to keep a list of availble points at a higher level
 	public List<Vector2> ItemDispersement(int numberOfPoints, List<Vector2> spawnPoints){
+		List<Vector2> pointList = spawnPoints; //copy points list to be able to modify list
 		List<Vector2> returnPoints = new List<Vector2>();
 		System.Random rand = new System.Random ();
 		int pointCount = spawnPoints.Count;
@@ -116,10 +121,18 @@ public class TileItemManager {
 
 		for(int i = 0; i < numberOfPoints; i++){ //remove randomly chosen point from list of points
 			int choice = rand.Next (pointCount);
-			returnPoints.Add (spawnPoints [choice]);
-			spawnPoints.RemoveAt (choice);
-			pointCount--;
+			returnPoints.Add (pointList [choice]);
+			pointList.RemoveAt (choice);
+			pointCount = pointList.Count;
 		}
 		return returnPoints;
+	}
+
+	public void PrintList(List<Vector2> toPrint){
+		int i = 0;
+		foreach(Vector2 vec in toPrint){
+			Debug.Log ("list: " + i + ": " + vec.ToString ());
+			i++;
+		}
 	}
 }

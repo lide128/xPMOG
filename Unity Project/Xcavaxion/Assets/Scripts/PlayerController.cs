@@ -68,6 +68,7 @@ public class PlayerController : MonoBehaviour {
 			bool elementsAdded = inventory.GetComponent<InventoryManager> ().playerInventory.AddElementContainerToInventory (temp);
 			if(elementsAdded){
 				Destroy (collision2d.gameObject); //remove the ElementBox after contents absorbed
+				UpdateElementBoxCount(-1);
 			}
 			else if(!elementsAdded){
 				//if we can't add all try adding part of the container
@@ -77,12 +78,14 @@ public class PlayerController : MonoBehaviour {
 			else{
 				//if unable to add elements, display message
 				//this should be an in game UI message
-//				Debug.Log("Could not add " + temp.volume + " " + temp.contents.name + " to player inventory, because amount exceeds carrying capacity.");
 				messages.CreateMessage ("Could not add " + temp.volume + " " + temp.contents.name + " to player inventory, because amount exceeds carrying capacity.", playerIdentifier);
 			}
-
 		}
+	}
 
+	public void UpdateElementBoxCount(int amount){
+		GameObject mapCont = GameObject.Find ("MapController");
+		mapCont.GetComponent<MapController> ().onScreenElementBoxCount += amount;
 	}
 
 	void OnTriggerEnter2D(Collider2D other){
@@ -97,6 +100,7 @@ public class PlayerController : MonoBehaviour {
 
 			//Handle the depositing of items, giving all of them automatically right now
 			//This is the base adding all of a copy of the players elements to it's inventory
+			//throws and exception here upon placement of the character at start on base, presumably because everything is empty
 			other.gameObject.GetComponent<BaseController> ().baseInventory.AddListOfElementContainer (
 				inventory.playerInventory.elementsInventory);
 			other.gameObject.GetComponent<BaseController> ().baseInventory.elementsUpdated = true;
