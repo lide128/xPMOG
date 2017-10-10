@@ -2,22 +2,50 @@
 using System.Collections;
 using System.Collections.Generic;
 using System;
+using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 public class MapController : MonoBehaviour {
 
-	public List<GameObject> TileTypes;
-    public int numberOfGroundTiles;
-    public int numberOfBufferTiles;
-	private Vector2 MapSize;
-	public Vector2 PlayableMapSize;
+	public List<GameObject> TileTypes; //the set of tile prefabs to be used to make the map, must be added to the map controller game object in the unity inspector
+
+    public int numberOfGroundTiles; 	//currently 5 different playable area ground tiles
+    public int numberOfBufferTiles; 	//currently 6 different buffer ground tiles
+	public int numberOfBoulderTiles; 	//currently 2 different boulders
+	public int numberOfEdgeTiles; 		//currently 3 different tiles for each edge
+
+	private Vector2 MapSize; //full tile map size, including border
+	public Vector2 PlayableMapSize; //just the playable tiles size
 	public Vector2 origin;
 	public int screenBuffer;
 	public float tileScale;
 
+	public int chanceOfBoulderTile; // 0 to 100 percent
+
+	private string borderTile = "BorderTile";
+	private string bufferTile = "BufferTile";
+	private string boulderTile = "BoulderTile";
+	private string groundTile = "GroundTile";
+	private string genericBase = "GenericBase";
+
+	private string northEdge = "northEdgeTile";
+	private string southEdge = "southEdgeTile";
+	private string westEdge = "westEdgeTile";
+	private string eastEdge = "eastEdgeTile";
+
+	private string NWCorner = "NWCornerTile";
+	private string NECorner = "NECornerTile";
+	private string SWCorner = "SWCornerTile";
+	private string SECorner = "SECornerTile";
+
+	private string NWBase = "NWBase";
+	private string NEBase = "NEBase";
+	private string SWBase = "SWBase";
+	private string SEBase = "SEBase";
+
 	public int elementFrequency;
 
 	private GameObject[,] _gameMap;
-	private char boulderChar = 'X';
 	private char[,] _charMap;
 
 	private TileController tileCont;
@@ -29,7 +57,7 @@ public class MapController : MonoBehaviour {
 		
 		_gameMap = CreateMap();
         
-		CreateBoulders ();
+		CreateOnGroundObjects();
 
         DrawMap();
 
@@ -38,49 +66,49 @@ public class MapController : MonoBehaviour {
 
 	private GameObject[,] CreateMap(){
 
-
-		GameObject border = FindGameObjectWithName (TileTypes, "BorderTile");
-		GameObject boulder = FindGameObjectWithName (TileTypes, "BoulderTile");
+		GameObject border = FindGameObjectWithName (borderTile);
+		GameObject boulder = FindGameObjectWithName (boulderTile + "1");
 
 		MapSize.x = PlayableMapSize.x + (screenBuffer * 2);
 		MapSize.y = PlayableMapSize.y + (screenBuffer * 2);
 
-        //System.Random rand = new System.Random();
-
         GameObject[,] _map = new GameObject[(int) MapSize.x, (int) MapSize.y];
-
 
 		for(var y = 0; y <  MapSize.y - 1; y++){
 			for(var x = 0; x < MapSize.x - 1; x++){
-				//check buffer tiles
-
+				
+				//check if we are on a buffer tile
 				if(WithinBuffer(x, y)){
                     int randomBuffer = rand.Next(numberOfBufferTiles);
-                    GameObject toUse = FindGameObjectWithName(TileTypes, "BufferTile" + (randomBuffer + 1));
+                    GameObject toUse = FindGameObjectWithName(bufferTile + (randomBuffer + 1));
 					_map [x, y] = toUse;
 					continue;
 				}
-				//check border tiles
+				//check if we are on an edge tile
 				if(OnBorder(x, y)){
-					_map [x, y] = border;
+					string axis = DetermineBufferTileAxis (x, y); //check which border axis we are on
+					GameObject toUse = FindGameObjectWithName (GeneratePrefabName (axis, numberOfEdgeTiles)); //then get the appropriate tile
+					_map [x, y] = toUse; //assign to the 2d array
 					continue;
 				}
-                if (CheckBorderCorners(x, y))
-                {
-                    _map[x, y] = boulder; //temp
+				//check if we are on a corner tile
+				string cornerIdentity = CheckBorderCorners(x, y);
+				if (cornerIdentity != ""){
+					GameObject toUse = FindGameObjectWithName(cornerIdentity);
+                    _map [x, y] = toUse;
                     continue;
                 }
-
+					
                 else
                 {
-                    //Pick one of the ground tiles to display randomly
-                    int randomGround = rand.Next(numberOfGroundTiles);
-                    GameObject toUse = FindGameObjectWithName(TileTypes, "GroundTile" + (randomGround+1));
+                    //Pick one of the ground tiles to display randomly for the playable game area
+//                    int randomGround = rand.Next(numberOfGroundTiles);
+//                    GameObject toUse = FindGameObjectWithName(groundTile + (randomGround+1));
+					GameObject toUse = FindGameObjectWithName(GeneratePrefabName(groundTile, numberOfBoulderTiles));
                     _map[x, y] = toUse;
                 }
 			}
 		}
-
 		return _map;
 	}
 
@@ -101,7 +129,7 @@ public class MapController : MonoBehaviour {
 				tileCoords.y = transformY;
 
 				var temp = Instantiate (_gameMap [x, y]) as GameObject;
-				temp.transform.position = new Vector3 (transformX, transformY, 0f);
+				temp.transform.position = new Vector3 (transformX, transformY, 0.0f);
 
 				//give the tile information about it's position on the screen
 				tileCont = temp.GetComponent<TileController> ();
@@ -109,6 +137,13 @@ public class MapController : MonoBehaviour {
 				tileCont.elementFrequency = elementFrequency;
 			}
 		}
+	}
+
+	public string GeneratePrefabName(string tileName, int numTiles){
+		int randomTileNum = rand.Next (numTiles);
+		string nameToReturn = tileName + (randomTileNum + 1);
+		//Debug.Log ("prefab name: " + nameToReturn);
+		return nameToReturn;
 	}
 
 	//Get the original 2d array map indicies for the tile, map does include buffer
@@ -119,8 +154,8 @@ public class MapController : MonoBehaviour {
 		return mapCoords;
 	}
 
-	private GameObject FindGameObjectWithName(List<GameObject> listOfGameObjects, String toFindName){
-		foreach(GameObject o in listOfGameObjects){
+	private GameObject FindGameObjectWithName(string toFindName){
+		foreach(GameObject o in TileTypes){
 			String currentName = o.name;
 			if (currentName.Equals (toFindName))
 				return o;
@@ -128,38 +163,151 @@ public class MapController : MonoBehaviour {
 		return null;
 	}
 
+	//this will determine the corner base locations on the playable map
+	private string CheckBaseCorners(int xCoord, int yCoord){
+		string returnBase = "";
+		//check NW base
+		if((xCoord == screenBuffer) && (yCoord == PlayableMapSize.y + (screenBuffer - 1))){
+			returnBase = NWBase;
+			Debug.Log ("northwest base identified");
+		}
+		//check NE base
+		if((xCoord == PlayableMapSize.x + (screenBuffer - 1)) && (yCoord == PlayableMapSize.y + (screenBuffer - 1))){
+			returnBase = NEBase;
+			Debug.Log ("northeast base identified");
+		}
+		//check SW base
+		if((xCoord == screenBuffer) && (yCoord == screenBuffer)){
+			returnBase = SWBase;
+			Debug.Log ("southwest base identified");
+		}
+		//check SE base
+		if((xCoord == PlayableMapSize.x + (screenBuffer - 1)) && (yCoord == screenBuffer)){
+			returnBase = SEBase;
+			Debug.Log ("southeast base identified");
+		}
+		return returnBase;
+	}
+
+	//detemines if a given position in the map array is within the buffer
 	private bool WithinBuffer(int xCoord, int yCoord){ 
-		return (xCoord < screenBuffer - 1 || xCoord > (screenBuffer - 1) + PlayableMapSize.x) ||
-		(yCoord < screenBuffer - 1 || yCoord > (screenBuffer - 1) + PlayableMapSize.y);
+		return (xCoord < screenBuffer - 1 || xCoord > (screenBuffer) + PlayableMapSize.x) ||
+		(yCoord < screenBuffer - 1 || yCoord > (screenBuffer) + PlayableMapSize.y);
+	}
+		
+	//returns a string corresponding to which axis the tile may be in order to correctly place border tiles
+	private string DetermineBufferTileAxis(int xCoord, int yCoord){
+		string returnAxis = ""; //if no match return empty string
+		//check north axis
+		if(((xCoord >= screenBuffer) || (xCoord < (PlayableMapSize.x + screenBuffer))) && (yCoord == PlayableMapSize.y + screenBuffer)){
+			returnAxis = northEdge;
+		}
+		//check south axis
+		if(((xCoord >= screenBuffer) || (xCoord < (PlayableMapSize.x + screenBuffer))) && (yCoord == screenBuffer - 1)){
+			returnAxis = southEdge;
+		}
+		//check west axis
+		if((xCoord == screenBuffer - 1) && ((yCoord >= screenBuffer) || (yCoord < (PlayableMapSize.y + screenBuffer)))){
+			returnAxis = westEdge;
+		}
+		//check east axis
+		if((xCoord == PlayableMapSize.x + screenBuffer) && ((yCoord >= screenBuffer) || (yCoord < (PlayableMapSize.y + screenBuffer)))){
+			returnAxis = eastEdge;
+		}
+
+		return returnAxis;
 	}
 
+	//determines if a position in the map array requires a border tile, if it's within the border
 	private bool OnBorder(int xCoord, int yCoord){
-		return (xCoord == (screenBuffer - 1) || xCoord == (screenBuffer - 1 + PlayableMapSize.x)) && (yCoord > (screenBuffer - 1) && (yCoord < (screenBuffer - 1) + PlayableMapSize.y)) ||
-		(yCoord == (screenBuffer - 1) || yCoord == (screenBuffer - 1 + PlayableMapSize.y)) && (xCoord > (screenBuffer - 1) && (xCoord < (screenBuffer - 1) + PlayableMapSize.x));
+		return (xCoord == (screenBuffer - 1) || xCoord == (screenBuffer + PlayableMapSize.x)) && (yCoord > (screenBuffer - 1) && (yCoord < (screenBuffer + PlayableMapSize.y))) ||
+			(yCoord == (screenBuffer - 1) || yCoord == (screenBuffer + PlayableMapSize.y)) && (xCoord > (screenBuffer - 1) && (xCoord < (screenBuffer + PlayableMapSize.x)));
 	}
 
-	private bool CheckBorderCorners(int xCoord, int yCoord){
-		return (xCoord == screenBuffer - 1 && yCoord == screenBuffer - 1) ||
-		(xCoord == (PlayableMapSize.x + screenBuffer)-1 && yCoord == (PlayableMapSize.y + screenBuffer)-1) ||
-		(xCoord == screenBuffer - 1 && yCoord == (PlayableMapSize.y + screenBuffer)-1) ||
-		(xCoord == (PlayableMapSize.x + screenBuffer)-1 && yCoord == screenBuffer - 1);
+	//determines the array position of border corners and which corner they are
+	private string CheckBorderCorners(int xCoord, int yCoord){
+		string returnCorner = ""; //if no match return empty string
+		//check NW corner
+		if((xCoord == screenBuffer - 1) && (yCoord == MapSize.y - screenBuffer)){
+			returnCorner = NWCorner;
+		}
+		//check NE corner
+		if((xCoord == MapSize.x - screenBuffer) && (yCoord == MapSize.y - screenBuffer)){
+			returnCorner = NECorner;
+		}
+		//check SW corner
+		if((xCoord == screenBuffer -1) && (yCoord == screenBuffer - 1)){
+			returnCorner = SWCorner;
+		}
+		//check SE corner
+		if((xCoord == MapSize.x - screenBuffer) && (yCoord == screenBuffer - 1)){
+			returnCorner = SECorner;
+		}
+		return returnCorner;
 	}
 
-	private void CreateBoulders(){
+	//after the the full map is created in memory, with buffer, borders, and ground
+	//this is where we add the stuff that is on the ground
+	//like boulders, bases, or anyother type of structures
+	//double for loop on playable map size
+	private void CreateOnGroundObjects(){
+		GameObject baseTile = FindGameObjectWithName (genericBase);
+		bool alreadyCovered = false;
+		System.Random rand = new System.Random ();
 
-		GameObject boulder = FindGameObjectWithName (TileTypes, "BoulderTile");
-		//update _gameMap state
-		for(var y = 0; y <  PlayableMapSize.y - 1; y++){
-			for (var x = 0; x < PlayableMapSize.x - 1; x++) {
-				if(x == 3 && y == 3){
-					_gameMap [x + screenBuffer, y + screenBuffer] = boulder;
+		for(var y = screenBuffer; y <  PlayableMapSize.y + screenBuffer; y++){
+			for (var x = screenBuffer; x < PlayableMapSize.x + screenBuffer; x++) {
+				int newNum = rand.Next (1, 101);
+
+				//check for bases, placed at corners with generic base for now
+				if(CheckBaseCorners(x, y) != ""){
+					_gameMap [x, y] = baseTile; //temp
+					alreadyCovered = true;
 				}
+				//fill map with boulders based on chance of boulder percent
+				else if(BoulderChance(newNum)){
+					GameObject boulder = FindGameObjectWithName (GeneratePrefabName(boulderTile, numberOfBoulderTiles));
+					_gameMap [x, y] = boulder;
+				}
+				alreadyCovered = false;
 			}
 		}
 	}
+
+	public bool BoulderChance(int randoNum){
+
+		return randoNum <= chanceOfBoulderTile;
+	}
+		
 		
 	// Update is called once per frame
 	void Update () {
 
 	}
+
+	public string YCoordState(int yCoord){
+		string returnState = "";
+
+		//check buffer
+		if(yCoord < screenBuffer - 1 || yCoord > (screenBuffer + PlayableMapSize.y)){
+			
+		}
+
+		//check edge
+		if((yCoord > (screenBuffer - 1) && (yCoord < (screenBuffer + PlayableMapSize.y))) ||
+			(yCoord == (screenBuffer - 1) || yCoord == (screenBuffer + PlayableMapSize.y))){
+
+		}
+
+		//check corner
+
+		return returnState;
+	}
+
+	public string XCoordState(int xCoord){
+		string returnState = "";
+		return returnState;
+	}
+
+
 }
