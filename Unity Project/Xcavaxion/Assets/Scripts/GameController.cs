@@ -9,6 +9,8 @@ public class GameController : MonoBehaviour {
 
 	public MapController currentGameMap;
 
+	public List<PlayerController> players;
+
 	public bool gameWon;
 
 	public int boulderCount;
@@ -33,7 +35,10 @@ public class GameController : MonoBehaviour {
 		GetElementBoxState ();
 
 		if(boulderCount == 0 && elementBoxCount == 0){
-			EndGame ();
+
+			if(CheckPlayerInventories()){
+				EndGame ();
+			}
 		}
 	}
 
@@ -47,6 +52,17 @@ public class GameController : MonoBehaviour {
 
 	public void EndGame(){
 		SceneManager.LoadScene(0);
+	}
+
+	//checks all the in game player inventories to make sure they are empty to end the game
+	public bool CheckPlayerInventories(){
+		bool emptyInventories = false;
+		foreach(PlayerController cont in players){
+			if(cont.inventory.currentTotalElementVolume == 0){
+				emptyInventories = true;
+			}
+		}
+		return emptyInventories;
 	}
 
 }
