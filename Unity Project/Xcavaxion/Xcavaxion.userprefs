@@ -1,15 +1,18 @@
 ﻿<Properties StartupItem="Assembly-CSharp.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/MapController.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/GameItemManager.cs">
     <Files>
-      <File FileName="Assets/Scripts/TileController.cs" Line="86" Column="48" />
+      <File FileName="Assets/Scripts/TileController.cs" Line="1" Column="1" />
       <File FileName="Assets/Scripts/InventoryManager.cs" Line="1" Column="1" />
-      <File FileName="Assets/Scripts/Inventory.cs" Line="247" Column="2" />
+      <File FileName="Assets/Scripts/Inventory.cs" Line="5" Column="1" />
       <File FileName="Assets/Scripts/BaseController.cs" Line="69" Column="54" />
-      <File FileName="Assets/Scripts/PlayerController.cs" Line="101" Column="20" />
-      <File FileName="Assets/Scripts/MapController.cs" Line="105" Column="41" />
+      <File FileName="Assets/Scripts/PlayerController.cs" Line="6" Column="1" />
+      <File FileName="Assets/Scripts/MapController.cs" Line="7" Column="1" />
       <File FileName="Assets/Scripts/UIMessageHandler.cs" Line="1" Column="1" />
       <File FileName="Assets/Scripts/UIManager.cs" Line="10" Column="1" />
+      <File FileName="Assets/Scripts/GameSetupParameters.cs" Line="4" Column="1" />
+      <File FileName="Assets/Scripts/Elements.cs" Line="1" Column="1" />
+      <File FileName="Assets/Scripts/GameItemManager.cs" Line="4" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System;
-using NUnit.Framework;
-using System.Security.Policy;
 
 public class Inventory {
 
