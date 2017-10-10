@@ -70,6 +70,7 @@
      <Compile Include="Assets\Scripts\ElementBox.cs" />
      <Compile Include="Assets\Scripts\ElementContainer.cs" />
      <Compile Include="Assets\Scripts\Elements.cs" />
+     <Compile Include="Assets\Scripts\GameController.cs" />
      <Compile Include="Assets\Scripts\GameItemManager.cs" />
      <Compile Include="Assets\Scripts\GameItems.cs" />
      <Compile Include="Assets\Scripts\GameSetupParameters.cs" />
