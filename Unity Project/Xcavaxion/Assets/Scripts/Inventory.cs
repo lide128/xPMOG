@@ -10,6 +10,8 @@ public class Inventory {
 
 	public int totalCurrency;
 
+	public string playerName;
+
 	public List<string> itemInventory;
 	public List<ElementContainer> elementsInventory;
 	public List<string> codeNuggetInventory;
@@ -25,9 +27,10 @@ public class Inventory {
 	public GameObject messages;
 
 
-	public Inventory(bool elementLimit, int elementCapacity){
+	public Inventory(bool elementLimit, int elementCapacity, string playerName){
 		this.elementVolumeLimit = elementLimit;
 		this.elementVolumeCapacity = elementCapacity;
+		this.playerName = playerName;
 
 		itemInventory = new List<string> ();
 		elementsInventory = new List<ElementContainer> ();
@@ -39,7 +42,7 @@ public class Inventory {
 	}
 
 	public void SendMessage(string message){
-		messages.GetComponent<UIMessageHandler> ().CreateMessage (message, "Player");
+		messages.GetComponent<UIMessageHandler> ().CreateMessage (message, playerName);
 	}
 
 	public List<string> GetElementNames(){

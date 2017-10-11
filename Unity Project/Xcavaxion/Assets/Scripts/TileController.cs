@@ -107,7 +107,9 @@ public class TileController : MonoBehaviour {
 
 		//TODO this needs to be changed, mining a boulder will be more of a process than just running in to it
 		//checks if the player collided with a boulder tile and if so sets the mined boulder conidtion to true, which will destroy the boulder
-		if(tileName.Contains(boulder) && !minedBoulder && collision.gameObject.name.Equals("Player")){
+		if(tileName.Contains(boulder) && !minedBoulder && collision.gameObject.name.Contains("Player")){
+			//collision.gameObject.name.Equals("Player")
+
 			Debug.Log("tile collided with: " + collision.gameObject.name);
 			minedBoulder = true;
 		}

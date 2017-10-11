@@ -70,7 +70,7 @@ public class UIManager : MonoBehaviour {
 	void DisplayMessageOnScreen(ActionMessage message){
 
 		Debug.Log ("current message text: " + message.messageText);
-		messagePrefab.GetComponent<Text> ().text = message.messageText;
+		messagePrefab.GetComponent<Text> ().text = message.messageOwner + ": " + message.messageText;
 
 		//Create a new on screen message object... on the screen
 		var clone = (GameObject) Instantiate(messagePrefab, messagePrefab.transform.position, messagePrefab.transform.rotation);

@@ -8,6 +8,7 @@ using UnityEngine.EventSystems;
 public class MapController : MonoBehaviour {
 
 	public List<GameObject> TileTypes; //the set of tile prefabs to be used to make the map, must be added to the map controller game object in the unity inspector
+	public List<GameObject> TeamBaseTiles;
 
     public int numberOfGroundTiles; 	//currently 5 different playable area ground tiles
     public int numberOfBufferTiles; 	//currently 6 different buffer ground tiles
@@ -45,6 +46,11 @@ public class MapController : MonoBehaviour {
 	private string NEBase = "NEBase";
 	private string SWBase = "SWBase";
 	private string SEBase = "SEBase";
+
+	private string blueTeam = "blue";
+	private string greenTeam = "green";
+	private string orangeTeam = "orange";
+	private string redTeam = "red";
 
 	public int elementFrequency;
 
@@ -251,16 +257,20 @@ public class MapController : MonoBehaviour {
 	//like boulders, bases, or anyother type of structures
 	//double for loop on playable map size
 	private void CreateOnGroundObjects(){
-		GameObject baseTile = FindGameObjectWithName (genericBase);
 		bool alreadyCovered = false;
 		System.Random rand = new System.Random ();
-
+		List<GameObject> listOfTeamBases = TeamBaseTiles;
+		int baseNum = 4;
 		for(var y = screenBuffer; y <  PlayableMapSize.y + screenBuffer; y++){
 			for (var x = screenBuffer; x < PlayableMapSize.x + screenBuffer; x++) {
 				int newNum = rand.Next (1, 101);
 
 				//check for bases, placed at corners with generic base for now
 				if(CheckBaseCorners(x, y) != ""){
+					//GameObject baseTile = FindGameObjectWithName (genericBase);
+					GameObject baseTile = RandomlyGrabTeamBase(listOfTeamBases);
+					baseTile.GetComponent<BaseController> ().baseNumber = baseNum;
+					baseNum--;
 					_gameMap [x, y] = baseTile; //temp
 					alreadyCovered = true;
 				}
@@ -273,6 +283,15 @@ public class MapController : MonoBehaviour {
 				alreadyCovered = false;
 			}
 		}
+	}
+
+	//randomly grab a team base from the set of bases, there are 4 for the moment.
+	public GameObject RandomlyGrabTeamBase(List<GameObject> bases){
+		int baseListSize = bases.Count;
+		int choice = rand.Next (baseListSize);
+		GameObject baseToReturn = bases[choice];
+		bases.RemoveAt (choice);
+		return baseToReturn;
 	}
 
 	public bool BoulderChance(int randoNum){

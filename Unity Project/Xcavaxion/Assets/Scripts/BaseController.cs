@@ -8,9 +8,14 @@ public class BaseController : TileController {
 	//A subclass of TileController to handle all of the specifics related to base operations
 	//May want to make a generic "move element containers around" class since this is the third time it'll be repeated
 
-	public string baseOwner;
+	public Team baseOwner;
+	public string baseColor;
+	public int baseNumber; //1 to 4 bases
 
 	public int totalElementVolume; 
+
+	public bool playersSpawned;
+	public List<PlayerController> teamPlayers;
 
 	public List<string> nameOfStoredElements;
 	public List<int> volumeOfStoredElements;
@@ -26,14 +31,28 @@ public class BaseController : TileController {
 		nameOfStoredElements = new List<string> ();
 		volumeOfStoredElements = new List<int> ();
 
-		baseInventory = new Inventory (false, 0);
+		baseInventory = new Inventory (false, 0, baseColor + " base");
 		baseInventory.elementsUpdated = false;
 
+		playersSpawned = false;
+
+	}
+
+	public void SpawnTeamPlayers(){
+
+		foreach(PlayerController player in teamPlayers){
+			player.transform.position = transform.position; //move the player to the staring base
+		}
 	}
 	
 	// Update is called once per frame
 	public override void Update () {
 		//don't think we need any of the TileController update functionality
+
+		if(teamPlayers.Count != 0 && !playersSpawned){
+			SpawnTeamPlayers ();
+			playersSpawned = true;
+		}
 
 		bool updated = baseInventory.elementsUpdated;
 

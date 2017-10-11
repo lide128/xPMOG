@@ -8,6 +8,9 @@ public class PlayerController : MonoBehaviour {
 
 	public string playerIdentifier;
 
+	public Team playerTeam;
+	public string teamColor;
+
 	public float playerSpeed;
 
 	public Renderer rend;
@@ -22,14 +25,14 @@ public class PlayerController : MonoBehaviour {
 	public UIMessageHandler messages;
 
 	// Use this for initialization
-	void Start () {
+	public virtual void Start () {
 		rend = GetComponent<SpriteRenderer> ();
 		playerRigidBody = GetComponent<Rigidbody2D> ();
 		playerCollider2d = GetComponent<BoxCollider2D> ();
 	}
 
 	// Update is called once per frame
-	void Update () {
+	public virtual void Update () {
 
 		//TODO move this to its own function 
 		//TODO restrict player movement, to tiles? to perpedicular axis? to movement inside tiles? to a set increment of distance?
@@ -90,6 +93,8 @@ public class PlayerController : MonoBehaviour {
 
 	void OnTriggerEnter2D(Collider2D other){
 
+		//TODO limit which base a player can drop off at 
+
 		//if players enters base collision box, give all elements to the base
 		if(other.gameObject.layer == 9) { //layer 9 is the layer for bases
 			
@@ -98,13 +103,20 @@ public class PlayerController : MonoBehaviour {
 			currentPos.y += 0.03f;
 			transform.position = currentPos;
 
-			//Handle the depositing of items, giving all of them automatically right now
-			//This is the base adding all of a copy of the players elements to it's inventory
-			//throws and exception here upon placement of the character at start on base, presumably because everything is empty
-			other.gameObject.GetComponent<BaseController> ().baseInventory.AddListOfElementContainer (
-				inventory.playerInventory.elementsInventory);
-			other.gameObject.GetComponent<BaseController> ().baseInventory.elementsUpdated = true;
-			inventory.playerInventory.ClearInventory ();
+			string touchedBaseTeam = other.gameObject.GetComponent<BaseController> ().baseColor;
+
+			if(touchedBaseTeam.Equals(teamColor)){
+				//Handle the depositing of items, giving all of them automatically right now
+				//This is the base adding all of a copy of the players elements to it's inventory
+				//throws and exception here upon placement of the character at start on base, presumably because everything is empty
+				other.gameObject.GetComponent<BaseController> ().baseInventory.AddListOfElementContainer (
+					inventory.playerInventory.elementsInventory);
+				other.gameObject.GetComponent<BaseController> ().baseInventory.elementsUpdated = true;
+				inventory.playerInventory.ClearInventory ();
+			}
+			else{
+				messages.CreateMessage ("Not your team's base.", playerIdentifier);
+			}
 		}
 	}
 

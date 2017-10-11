@@ -13,6 +13,9 @@ public class GameController : MonoBehaviour {
 
 	public bool gameWon;
 
+	public bool basesPresent;
+	public bool playersDistributed;
+
 	public int boulderCount;
 	public int elementBoxCount;
 
@@ -20,6 +23,8 @@ public class GameController : MonoBehaviour {
 	void Start () {
 
 		gameWon = false;
+		basesPresent = false;
+		playersDistributed = false;
 		boulderCount = 0;
 		elementBoxCount = 0;
 
@@ -39,6 +44,18 @@ public class GameController : MonoBehaviour {
 			if(CheckPlayerInventories()){
 				EndGame ();
 			}
+		}
+
+		if(!basesPresent){
+			if(CheckForBases()){
+				basesPresent = true;
+				Debug.Log ("Found bases!");
+			}
+		}
+		if(basesPresent && !playersDistributed){
+			DistributePlayers ();
+			playersDistributed = true;
+			Debug.Log ("Distributed players!");
 		}
 	}
 
@@ -63,6 +80,70 @@ public class GameController : MonoBehaviour {
 			}
 		}
 		return emptyInventories;
+	}
+
+	public bool CheckForBases(){
+		Debug.Log ("checking for bases!");
+		GameObject blueBase = GameObject.Find ("BlueBase(Clone)");
+		GameObject greenBase = GameObject.Find ("GreenBase(Clone)");
+		GameObject orangeBase = GameObject.Find ("OrangeBase(Clone)");
+		GameObject redBase = GameObject.Find ("RedBase(Clone)");
+
+		bool blueCheck = false;
+		bool greenCheck = false;
+		bool orangeCheck = false;
+		bool redCheck = false;
+
+		if(blueBase != null){
+			Debug.Log ("blue base found");
+			blueCheck = true;
+		}
+		if(greenBase != null){
+			Debug.Log ("green base found");
+
+			greenCheck = true;
+		}
+		if(orangeBase != null){
+			Debug.Log ("orange base found");
+
+			orangeCheck = true;
+		}
+		if(redBase != null){
+			Debug.Log ("red base found");
+
+			redCheck = true;
+		}
+
+		return blueCheck && greenCheck && orangeCheck && redCheck;
+	}
+
+
+	public void DistributePlayers(){
+
+		foreach(PlayerController player in players){
+
+			if(player.teamColor.Equals("blue")){
+				GameObject blueBase = GameObject.Find ("BlueBase(Clone)");
+				blueBase.GetComponent<BaseController> ().teamPlayers.Add (player);	
+				Debug.Log ("player added to blue base");
+			}
+			if(player.teamColor.Equals("green")){
+				GameObject greenBase = GameObject.Find ("GreenBase(Clone)");
+				greenBase.GetComponent<BaseController> ().teamPlayers.Add (player);
+				Debug.Log ("player added to green base");
+			}
+			if(player.teamColor.Equals("orange")){
+				GameObject orangeBase = GameObject.Find ("OrangeBase(Clone)");
+				orangeBase.GetComponent<BaseController> ().teamPlayers.Add (player);
+				Debug.Log ("player added to orange base");
+			}
+			if(player.teamColor.Equals("red")){
+				GameObject redBase = GameObject.Find ("RedBase(Clone)");
+				redBase.GetComponent<BaseController> ().teamPlayers.Add (player);
+				Debug.Log ("player added to red base");
+			}
+		}
+
 	}
 
 }

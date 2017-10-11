@@ -16,7 +16,8 @@ public class InventoryManager : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		playerInventory = new Inventory (true, elementVolumeCapacity); //trying out a seperate inventory class to contain all the actions
+		string playerName = gameObject.GetComponentInParent<PlayerController> ().playerIdentifier;
+		playerInventory = new Inventory (true, elementVolumeCapacity, playerName); //trying out a seperate inventory class to contain all the actions
 
 		elementNames = new List<string> ();
 		elementVols = new List<int> ();
