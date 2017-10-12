@@ -73,11 +73,13 @@ public class GameController : MonoBehaviour {
 
 	//checks all the in game player inventories to make sure they are empty to end the game
 	public bool CheckPlayerInventories(){
+		int totalVolume = 0;
 		bool emptyInventories = false;
 		foreach(PlayerController cont in players){
-			if(cont.inventory.currentTotalElementVolume == 0){
-				emptyInventories = true;
-			}
+			totalVolume += cont.inventory.currentTotalElementVolume;
+		}
+		if(totalVolume == 0){
+			emptyInventories = true;
 		}
 		return emptyInventories;
 	}

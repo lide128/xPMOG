@@ -22,10 +22,13 @@ public class PlayerController : MonoBehaviour {
 
 	public bool playerMoving;
 
+	public Vector3 basePosition;
+
 	public UIMessageHandler messages;
 
 	// Use this for initialization
 	public virtual void Start () {
+		basePosition = Vector3.zero;
 		rend = GetComponent<SpriteRenderer> ();
 		playerRigidBody = GetComponent<Rigidbody2D> ();
 		playerCollider2d = GetComponent<BoxCollider2D> ();
@@ -63,27 +66,32 @@ public class PlayerController : MonoBehaviour {
 			Physics2D.IgnoreLayerCollision (8, 22, true);
 		}
 
-		//if player collides with ElementBox, attempt to add ElementContainer to player's element inventory
-		if(collision2d.gameObject.layer == 25){ 
-
-			//trying the separate inventory class here
-			ElementContainer temp = collision2d.gameObject.GetComponent<ElementBox> ().container;
-			bool elementsAdded = inventory.GetComponent<InventoryManager> ().playerInventory.AddElementContainerToInventory (temp);
-			if(elementsAdded){
-				Destroy (collision2d.gameObject); //remove the ElementBox after contents absorbed
-				UpdateElementBoxCount(-1);
-			}
-			else if(!elementsAdded){
-				//if we can't add all try adding part of the container
-				inventory.GetComponent<InventoryManager> ().playerInventory.PartialElementAdd (temp);
-				//don't destroy the container
-			}
-			else{
-				//if unable to add elements, display message
-				//this should be an in game UI message
-				messages.CreateMessage ("Could not add " + temp.volume + " " + temp.contents.name + " to player inventory, because amount exceeds carrying capacity.", playerIdentifier);
-			}
+		//ignore element box collisions
+		if(collision2d.gameObject.layer == 25){
+			Physics2D.IgnoreLayerCollision (25, 22, true);
 		}
+
+//		//if player collides with ElementBox, attempt to add ElementContainer to player's element inventory
+//		if(collision2d.gameObject.layer == 25){ 
+//
+//			//trying the separate inventory class here
+//			ElementContainer temp = collision2d.gameObject.GetComponent<ElementBox> ().container;
+//			bool elementsAdded = inventory.GetComponent<InventoryManager> ().playerInventory.AddElementContainerToInventory (temp);
+//			if(elementsAdded){
+//				Destroy (collision2d.gameObject); //remove the ElementBox after contents absorbed
+//				UpdateElementBoxCount(-1);
+//			}
+//			else if(!elementsAdded){
+//				//if we can't add all try adding part of the container
+//				inventory.GetComponent<InventoryManager> ().playerInventory.PartialElementAdd (temp);
+//				//don't destroy the container
+//			}
+//			else{
+//				//if unable to add elements, display message
+//				//this should be an in game UI message
+//				//messages.CreateMessage ("Could not add " + temp.volume + " " + temp.contents.name + " to player inventory, because amount exceeds carrying capacity.", playerIdentifier);
+//			}
+//		}
 	}
 
 	public void UpdateElementBoxCount(int amount){
@@ -93,7 +101,24 @@ public class PlayerController : MonoBehaviour {
 
 	void OnTriggerEnter2D(Collider2D other){
 
-		//TODO limit which base a player can drop off at 
+		//this is for element boxes being traversible even when you can't grab them
+		//if player triggers ElementBox, attempt to add ElementContainer to player's element inventory
+		if(other.gameObject.layer == 25){ 
+
+			//trying the separate inventory class here
+			ElementContainer temp = other.gameObject.GetComponent<ElementBox> ().container;
+			bool elementsAdded = inventory.GetComponent<InventoryManager> ().playerInventory.AddElementContainerToInventory (temp);
+			if(elementsAdded){
+				Destroy (other.gameObject); //remove the ElementBox after contents absorbed
+				UpdateElementBoxCount(-1);
+			}
+			else if(!elementsAdded){
+				//if we can't add all try adding part of the container
+				inventory.GetComponent<InventoryManager> ().playerInventory.PartialElementAdd (temp);
+				//don't destroy the container
+			}
+
+		}
 
 		//if players enters base collision box, give all elements to the base
 		if(other.gameObject.layer == 9) { //layer 9 is the layer for bases

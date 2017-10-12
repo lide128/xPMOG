@@ -42,6 +42,7 @@ public class BaseController : TileController {
 
 		foreach(PlayerController player in teamPlayers){
 			player.transform.position = transform.position; //move the player to the staring base
+			player.basePosition = transform.position; 		//give the players the position of their base
 		}
 	}
 	

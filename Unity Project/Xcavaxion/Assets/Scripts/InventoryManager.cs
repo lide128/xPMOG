@@ -8,6 +8,8 @@ public class InventoryManager : MonoBehaviour {
 	public int elementVolumeCapacity; //the carrying capacity of elements based on volume, perhaps no limit set at 0 or -1?
 	public int currentTotalElementVolume;
 
+	public bool elementsFull;
+
 	public List<string> elementNames;
 	public List<int> elementVols;
 	public int elementsCount;
@@ -16,6 +18,8 @@ public class InventoryManager : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		elementsFull = false;
+
 		string playerName = gameObject.GetComponentInParent<PlayerController> ().playerIdentifier;
 		playerInventory = new Inventory (true, elementVolumeCapacity, playerName); //trying out a seperate inventory class to contain all the actions
 
@@ -25,6 +29,13 @@ public class InventoryManager : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+
+		if(currentTotalElementVolume >= elementVolumeCapacity){
+			elementsFull = true;
+		}
+		else{
+			elementsFull = false;
+		}
 
 		if(playerInventory.elementsUpdated){
 

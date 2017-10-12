@@ -54,8 +54,7 @@ public class MapController : MonoBehaviour {
 
 	public int elementFrequency;
 
-	private GameObject[,] _gameMap;
-	private char[,] _charMap;
+	public GameObject[,] _gameMap;
 
 	private TileController tileCont;
 

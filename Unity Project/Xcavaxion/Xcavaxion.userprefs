@@ -1,16 +1,19 @@
 ﻿<Properties StartupItem="Assembly-CSharp.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/MapController.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/TileItemManager.cs">
     <Files>
-      <File FileName="Assets/Scripts/InventoryManager.cs" Line="1" Column="1" />
-      <File FileName="Assets/Scripts/TileController.cs" Line="112" Column="4" />
-      <File FileName="Assets/Scripts/BaseController.cs" Line="12" Column="39" />
-      <File FileName="Assets/Scripts/PlayerController.cs" Line="78" Column="3" />
-      <File FileName="Assets/Scripts/AIController.cs" Line="56" Column="3" />
-      <File FileName="Assets/Scripts/GameController.cs" Line="68" Column="1" />
-      <File FileName="Assets/Scripts/Team.cs" Line="12" Column="75" />
-      <File FileName="Assets/Scripts/PlayerStartPoint.cs" Line="17" Column="1" />
-      <File FileName="Assets/Scripts/MapController.cs" Line="267" Column="28" />
+      <File FileName="Assets/Scripts/TileController.cs" Line="32" Column="34" />
+      <File FileName="Assets/Scripts/InventoryManager.cs" Line="23" Column="34" />
+      <File FileName="Assets/Scripts/BaseController.cs" Line="40" Column="1" />
+      <File FileName="Assets/Scripts/PlayerController.cs" Line="118" Column="16" />
+      <File FileName="Assets/Scripts/AIController.cs" Line="36" Column="22" />
+      <File FileName="Assets/Scripts/GameController.cs" Line="141" Column="53" />
+      <File FileName="Assets/Scripts/PlayerStartPoint.cs" Line="18" Column="3" />
+      <File FileName="Assets/Scripts/MapController.cs" Line="272" Column="6" />
+      <File FileName="Assets/Scripts/ElementBox.cs" Line="39" Column="18" />
+      <File FileName="Assets/Scripts/UIManager.cs" Line="73" Column="55" />
+      <File FileName="Assets/Scripts/Inventory.cs" Line="34" Column="1" />
+      <File FileName="Assets/Scripts/TileItemManager.cs" Line="5" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
