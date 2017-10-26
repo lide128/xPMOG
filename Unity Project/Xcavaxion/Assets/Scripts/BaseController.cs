@@ -6,7 +6,7 @@ using System;
 public class BaseController : TileController {
 
 	//A subclass of TileController to handle all of the specifics related to base operations
-	//May want to make a generic "move element containers around" class since this is the third time it'll be repeated
+	//May want to make a generic "move element containers around" class since this is the third time it'll be repeated DONE
 
 	public Team baseOwner;
 	public string baseColor;
@@ -72,11 +72,9 @@ public class BaseController : TileController {
 	//How to handle players moving on to the base
 	//Temp: just want to have the player dump all elements in to the base for the time being
 	void OnTriggerEnter2D(Collider2D other){
-		Debug.Log ("base trigger!");
 		string triggeesName = other.gameObject.name;
 		Debug.Log (FirstCharToUpper(triggeesName) + " triggered " + baseOwner + "'s base.");
 		if(triggeesName == "Player"){
-			Debug.Log ("Base trigger player!");
 		}
 
 	}

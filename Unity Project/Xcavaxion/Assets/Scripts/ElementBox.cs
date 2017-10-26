@@ -13,7 +13,6 @@ public class ElementBox : MonoBehaviour {
 	public Renderer rend;
 
 	void Awake(){
-		Debug.Log ("Started new element box!");
 		container = new ElementContainer ();
 		rend = GetComponent<SpriteRenderer> ();
 	}
@@ -32,7 +31,6 @@ public class ElementBox : MonoBehaviour {
 
 	//TODO want to be able to highlight element boxes to see details in the UI about their contents
 	void OnMouseEnter(){
-		Debug.Log ("Element Container mouse over!");
 		rend.material.color = Color.red;
 	}
 

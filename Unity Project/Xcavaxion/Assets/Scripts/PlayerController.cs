@@ -13,7 +13,7 @@ public class PlayerController : MonoBehaviour {
 
 	public float playerSpeed;
 
-	public Renderer rend;
+	public SpriteRenderer rend;
 
 	private Rigidbody2D playerRigidBody;
 	private BoxCollider2D playerCollider2d;
@@ -21,6 +21,7 @@ public class PlayerController : MonoBehaviour {
 	public InventoryManager inventory; //inventory cannot be InventoryManager class because it is a monobehaviour
 
 	public bool playerMoving;
+	public bool droppedOffAtBase;
 
 	public Vector3 basePosition;
 
@@ -32,6 +33,7 @@ public class PlayerController : MonoBehaviour {
 		rend = GetComponent<SpriteRenderer> ();
 		playerRigidBody = GetComponent<Rigidbody2D> ();
 		playerCollider2d = GetComponent<BoxCollider2D> ();
+		droppedOffAtBase = false;
 	}
 
 	// Update is called once per frame
@@ -56,10 +58,21 @@ public class PlayerController : MonoBehaviour {
 		if(Input.GetAxisRaw("Vertical") < 0.5f && Input.GetAxisRaw("Vertical") > -0.5f){
 			playerRigidBody.velocity = new Vector2 (playerRigidBody.velocity.x, 0f);
 		}
+		HorzontalSpriteFlip (playerRigidBody, rend);
 	}
 
-	void OnCollisionEnter2D(Collision2D collision2d){
-		Debug.Log ("player collided with: " + collision2d.gameObject.name);
+	public void HorzontalSpriteFlip(Rigidbody2D body2D, SpriteRenderer renderer){
+
+		if(body2D.velocity.x < 0){
+			renderer.flipX = true;
+		}
+		if(body2D.velocity.x > 0){
+			renderer.flipX = false;
+		}
+	}
+
+	public virtual void OnCollisionEnter2D(Collision2D collision2d){
+		//Debug.Log ("player collided with: " + collision2d.gameObject.name);
 
 		//this is here in order to ignore collisions with the box colliders of the ground tiles
 		if(collision2d.gameObject.layer == 8){
@@ -111,13 +124,18 @@ public class PlayerController : MonoBehaviour {
 			if(elementsAdded){
 				Destroy (other.gameObject); //remove the ElementBox after contents absorbed
 				UpdateElementBoxCount(-1);
+				droppedOffAtBase = false; //we are adding more so we haven't dropped off yet.
 			}
 			else if(!elementsAdded){
 				//if we can't add all try adding part of the container
-				inventory.GetComponent<InventoryManager> ().playerInventory.PartialElementAdd (temp);
+				bool partialSuccess = inventory.GetComponent<InventoryManager> ().playerInventory.PartialElementAdd (temp);
 				//don't destroy the container
+				if(partialSuccess){
+					droppedOffAtBase = false;
+					print ("Addded a partial amount of an element!"); //checking for partial amount bug
+				}
 			}
-
+				
 		}
 
 		//if players enters base collision box, give all elements to the base
@@ -138,6 +156,7 @@ public class PlayerController : MonoBehaviour {
 					inventory.playerInventory.elementsInventory);
 				other.gameObject.GetComponent<BaseController> ().baseInventory.elementsUpdated = true;
 				inventory.playerInventory.ClearInventory ();
+				droppedOffAtBase = true;
 			}
 			else{
 				messages.CreateMessage ("Not your team's base.", playerIdentifier);
@@ -152,6 +171,12 @@ public class PlayerController : MonoBehaviour {
 			Vector3 currentPos = transform.position;
 			currentPos.y -= 0.03f;
 			transform.position = currentPos;
+		}
+	}
+
+	public void FinishedBaseDropOff(){
+		if(droppedOffAtBase){
+			
 		}
 	}
 

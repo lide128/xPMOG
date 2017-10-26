@@ -42,7 +42,9 @@ public class GameController : MonoBehaviour {
 		if(boulderCount == 0 && elementBoxCount == 0){
 
 			if(CheckPlayerInventories()){
-				EndGame ();
+				CheckWhoWon ();
+				CheckTimePassed (30.0f); //wait 30 seconds until the game closes
+//				EndGame ();
 			}
 		}
 
@@ -97,26 +99,58 @@ public class GameController : MonoBehaviour {
 		bool redCheck = false;
 
 		if(blueBase != null){
-			Debug.Log ("blue base found");
 			blueCheck = true;
 		}
 		if(greenBase != null){
-			Debug.Log ("green base found");
-
 			greenCheck = true;
 		}
 		if(orangeBase != null){
-			Debug.Log ("orange base found");
-
 			orangeCheck = true;
 		}
 		if(redBase != null){
-			Debug.Log ("red base found");
-
 			redCheck = true;
 		}
 
 		return blueCheck && greenCheck && orangeCheck && redCheck;
+	}
+
+	//this is a dumb way to do this
+	public void CheckWhoWon(){
+		GameObject blueBase = GameObject.Find ("BlueBase(Clone)");
+		GameObject greenBase = GameObject.Find ("GreenBase(Clone)");
+		GameObject orangeBase = GameObject.Find ("OrangeBase(Clone)");
+		GameObject redBase = GameObject.Find ("RedBase(Clone)");
+
+		int blueAmount = blueBase.GetComponent<BaseController>().totalElementVolume;
+		int greenAmount = greenBase.GetComponent<BaseController>().totalElementVolume;
+		int orangeAmount = orangeBase.GetComponent<BaseController>().totalElementVolume;
+		int redAmount = redBase.GetComponent<BaseController>().totalElementVolume;
+
+		int highest = 0;
+		string winStatement = "";
+
+		print ("Blue Total: " + blueAmount);
+		print ("Green Total: " + greenAmount);
+		print ("Orange Total: " + orangeAmount);
+		print ("Red Total: " + redAmount);
+
+		if (blueAmount > highest){
+			highest = blueAmount;
+			winStatement = "BLUE TEAM WINS!";
+		}
+		if (greenAmount > highest){
+			highest = greenAmount;
+			winStatement = "GREEN TEAM WINS!";
+		}
+		if (orangeAmount > highest){
+			highest = orangeAmount;
+			winStatement = "ORANGE TEAM WINS!";
+		}
+		if (redAmount > highest){
+			highest = redAmount;
+			winStatement = "RED TEAM WINS!";
+		}
+		print (winStatement);	
 	}
 
 
@@ -127,25 +161,29 @@ public class GameController : MonoBehaviour {
 			if(player.teamColor.Equals("blue")){
 				GameObject blueBase = GameObject.Find ("BlueBase(Clone)");
 				blueBase.GetComponent<BaseController> ().teamPlayers.Add (player);	
-				Debug.Log ("player added to blue base");
 			}
 			if(player.teamColor.Equals("green")){
 				GameObject greenBase = GameObject.Find ("GreenBase(Clone)");
 				greenBase.GetComponent<BaseController> ().teamPlayers.Add (player);
-				Debug.Log ("player added to green base");
 			}
 			if(player.teamColor.Equals("orange")){
 				GameObject orangeBase = GameObject.Find ("OrangeBase(Clone)");
 				orangeBase.GetComponent<BaseController> ().teamPlayers.Add (player);
-				Debug.Log ("player added to orange base");
 			}
 			if(player.teamColor.Equals("red")){
 				GameObject redBase = GameObject.Find ("RedBase(Clone)");
 				redBase.GetComponent<BaseController> ().teamPlayers.Add (player);
-				Debug.Log ("player added to red base");
 			}
 		}
 
 	}
+
+	public bool CheckTimePassed(float timeToWait){
+		float delta = 0.0f;
+		while(timeToWait >= delta){
+			delta += Time.deltaTime;
+		}
+		return true;
+	} 
 
 }

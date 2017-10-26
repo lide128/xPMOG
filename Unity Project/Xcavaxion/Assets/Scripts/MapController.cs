@@ -15,6 +15,8 @@ public class MapController : MonoBehaviour {
 	public int numberOfBoulderTiles; 	//currently 2 different boulders
 	public int numberOfEdgeTiles; 		//currently 3 different tiles for each edge
 
+	public int numberOfBoulderPrefabs;  //currently 3 different boulder prefabs
+
 	private Vector2 MapSize; //full tile map size, including border
 	public Vector2 PlayableMapSize; //just the playable tiles size
 	public Vector2 origin;
@@ -56,6 +58,8 @@ public class MapController : MonoBehaviour {
 
 	public GameObject[,] _gameMap;
 
+	public GameObject[] _currentBoulders;
+
 	private TileController tileCont;
 
 	System.Random rand = new System.Random();
@@ -74,7 +78,7 @@ public class MapController : MonoBehaviour {
 		
 	private GameObject[,] CreateMap(){
 
-		GameObject border = FindGameObjectWithName (borderTile);
+//		GameObject border = FindGameObjectWithName (borderTile);
 		GameObject boulder = FindGameObjectWithName (boulderTile + "1");
 
 		MapSize.x = PlayableMapSize.x + (screenBuffer * 2);
@@ -111,6 +115,8 @@ public class MapController : MonoBehaviour {
                 {
                     //Pick one of the ground tiles to display randomly for the playable game area
 					GameObject toUse = FindGameObjectWithName(GeneratePrefabName(groundTile, numberOfBoulderTiles));
+//					toUse.GetComponent<TileController> ().hasBoulder = false;
+					toUse.GetComponent<TileController> ().UnsetHasBoulder();
                     _map[x, y] = toUse;
                 }
 			}
@@ -136,6 +142,18 @@ public class MapController : MonoBehaviour {
 
 				var temp = Instantiate (_gameMap [x, y]) as GameObject;
 				temp.transform.position = new Vector3 (transformX, transformY, 0.0f);
+
+				//is this tile a ground tile?
+				if(temp.name.Contains(groundTile)){
+					//if so then does it have a boulder?
+					int chanceNum = rand.Next (1, 101); //choose number for boulderchance
+					if(BoulderChance(chanceNum)){
+						//if so pass the relevant info to the tile, so the boulder can make itself
+						int boulderNum = rand.Next(3); //choose boulder prefab
+						temp.GetComponent<TileController>().SetHasBoulder();
+						temp.GetComponent<TileController> ().boulderPrefabChoice = boulderNum + 1;
+					}
+				}
 
 				//give the tile information about it's position on the screen
 				tileCont = temp.GetComponent<TileController> ();
@@ -174,22 +192,18 @@ public class MapController : MonoBehaviour {
 		//check NW base
 		if((xCoord == screenBuffer) && (yCoord == PlayableMapSize.y + (screenBuffer - 1))){
 			returnBase = NWBase;
-			Debug.Log ("northwest base identified");
 		}
 		//check NE base
 		if((xCoord == PlayableMapSize.x + (screenBuffer - 1)) && (yCoord == PlayableMapSize.y + (screenBuffer - 1))){
 			returnBase = NEBase;
-			Debug.Log ("northeast base identified");
 		}
 		//check SW base
 		if((xCoord == screenBuffer) && (yCoord == screenBuffer)){
 			returnBase = SWBase;
-			Debug.Log ("southwest base identified");
 		}
 		//check SE base
 		if((xCoord == PlayableMapSize.x + (screenBuffer - 1)) && (yCoord == screenBuffer)){
 			returnBase = SEBase;
-			Debug.Log ("southeast base identified");
 		}
 		return returnBase;
 	}
@@ -257,12 +271,12 @@ public class MapController : MonoBehaviour {
 	//double for loop on playable map size
 	private void CreateOnGroundObjects(){
 		bool alreadyCovered = false;
-		System.Random rand = new System.Random ();
+		System.Random rand2 = new System.Random ();
 		List<GameObject> listOfTeamBases = TeamBaseTiles;
 		int baseNum = 4;
 		for(var y = screenBuffer; y <  PlayableMapSize.y + screenBuffer; y++){
 			for (var x = screenBuffer; x < PlayableMapSize.x + screenBuffer; x++) {
-				int newNum = rand.Next (1, 101);
+				int newNum = rand2.Next (1, 101);
 
 				//check for bases, placed at corners with generic base for now
 				if(CheckBaseCorners(x, y) != ""){
@@ -274,11 +288,15 @@ public class MapController : MonoBehaviour {
 					alreadyCovered = true;
 				}
 				//fill map with boulders based on chance of boulder percent
-				else if(BoulderChance(newNum)){
-					GameObject boulder = FindGameObjectWithName (GeneratePrefabName(boulderTile, numberOfBoulderTiles));
-					_gameMap [x, y] = boulder;
-					onScreenBoulderCount++;
-				}
+//				else if(BoulderChance(newNum)){
+//					//GameObject boulder = FindGameObjectWithName (GeneratePrefabName(boulderTile, numberOfBoulderTiles));
+//					//_gameMap [x, y] = boulder;
+////					_gameMap[x, y].GetComponent<TileController>().hasBoulder = true; //for the new boulder prefab
+//					_gameMap[x, y].GetComponent<TileController>().SetHasBoulder();
+//					int boulderPrefabNum = rand2.Next(numberOfBoulderPrefabs) + 1;
+//					_gameMap[x, y].GetComponent<TileController>().boulderPrefabChoice = boulderPrefabNum;
+//					onScreenBoulderCount++;
+//				}
 				alreadyCovered = false;
 			}
 		}
@@ -299,6 +317,11 @@ public class MapController : MonoBehaviour {
 				
 	// Update is called once per frame
 	void Update () {
+		LocateAllBoulders ();
+	}
+
+	public void LocateAllBoulders(){
+		_currentBoulders = GameObject.FindGameObjectsWithTag("Boulder");
 
 	}
 

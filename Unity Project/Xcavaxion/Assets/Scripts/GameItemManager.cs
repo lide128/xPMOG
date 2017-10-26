@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using NUnit.Framework;
 
 public class GameItemManager {
 
@@ -61,8 +62,16 @@ public class GameItemManager {
 		
 	}
 
+	public List<string> GetListOfElementNames(){
+		List<string> names = new List<string> ();
+		foreach(Elements ele in listOfElements){
+			names.Add (ele.name);
+		}
+		return names;
+	}
+
 	//returns a type of element weighted on their prevalence number
-	public Elements getElementDispersement(){
+	public Elements GetElementDispersement(){
 		System.Random rand = new System.Random ();
 		List<Elements> roulette = new List<Elements> ();
 
@@ -77,11 +86,11 @@ public class GameItemManager {
 	}
 
 	//random amount based on prevalence... I guess?
-	public ElementContainer getRandomVolumeOfDispersedElement(){
+	public ElementContainer GetRandomVolumeOfDispersedElement(){
 
 		ElementContainer toReturn = new ElementContainer ();
 		System.Random rand = new System.Random ();
-		Elements temp = getElementDispersement ();
+		Elements temp = GetElementDispersement ();
 		toReturn.contents = temp;
 		int currentPrev = toReturn.contents.prevalence;
 		int factor = (int)((currentPrev * currentPrev) * elementConstant * 100); //100 just to stop from getting a volume of zero

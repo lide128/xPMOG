@@ -25,9 +25,9 @@ public class Elements {
 	public string name;					//the name of the type of element
 	public string description;			//a short text description to possibly include in the UI, with possibly useful info?
 	public string symbol;				//the chemical symbol for the element, appears on the element boxes
-	public int extractionDifficulty;	//how hard it is to mine from the ground, ties in to how long a boulder will take to mine
+	public int extractionDifficulty;	// 1(easy) ... 5(hard) how hard it is to mine from the ground, ties in to how long a boulder will take to mine
 	public int valueByWeight;			//how much the element is worth based on the weight
-	public int prevalence;				//how common to find the element is 
+	public int prevalence;				// 1(rare) ... 5(common) how common to find the element is 
 	public int density;					//how dense the element is as far as it molecules, not sure if this used now or how this will be used.
 
 

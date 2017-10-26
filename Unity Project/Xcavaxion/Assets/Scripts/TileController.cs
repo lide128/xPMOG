@@ -2,10 +2,14 @@
 using System.Collections;
 using System;
 using System.Collections.Generic;
+using NUnit.Framework;
 
 public class TileController : MonoBehaviour {
 
 	public Renderer rend;
+
+	public bool hasBoulder;
+	public BoulderController tileBoulder; //reference to the potential boulder on this tile
 
 	public bool minedBoulder;
 	public bool hasBuriedItems;
@@ -14,6 +18,9 @@ public class TileController : MonoBehaviour {
 
 	public int elementFrequency; //scale of 1 to 100, 100 being alot of elements?
 	private int groundTilePrefabCount = 5; //the number of different ground tile prefabs available
+	private int boulderPrefabCount = 3;
+
+	public int boulderPrefabChoice;
 
 	private string tileName;
 	private string boulder = "BoulderTile";
@@ -21,6 +28,8 @@ public class TileController : MonoBehaviour {
     private string border = "BorderTile";
     private string ground = "GroundTile";
 	private string baseTile = "Base";
+
+	private string boulderPrefab = "BoulderPrefab";
 	private string prefabsPath = "Prefabs/";
 
 	private List<Vector2> itemSpawnPoints;
@@ -31,6 +40,8 @@ public class TileController : MonoBehaviour {
 
 	public UIMessageHandler messages;
 
+	System.Random rand = new System.Random ();
+
 	// Use this for initialization
 	public virtual void Start () {
        
@@ -40,10 +51,6 @@ public class TileController : MonoBehaviour {
 		hasBuriedItems = false;
 		hasBuriedElements = false;
 		hasBuriedCodeNuggets = false;
-
-		if(tileName.Contains(boulder)){
-			hasBuriedElements = true;
-		}
 
 		if(hasBuriedItems || hasBuriedElements || hasBuriedCodeNuggets){
 
@@ -62,10 +69,31 @@ public class TileController : MonoBehaviour {
 				Debug.Log ("Added code nuggets to tile");
 			}
 		}
+
+		if(hasBoulder){
+			CreateBoulder ();
+		}
+	}
+
+	public void CreateBoulder(){
+		//create a new boulder prefab on top of this tile
+		string toLoad = boulderPrefab + boulderPrefabChoice;
+
+		//select random prefab
+		GameObject newBoulder = (GameObject)Instantiate (Resources.Load (prefabsPath + toLoad), 
+			new Vector3(transform.position.x, transform.position.y, 0.0f), transform.rotation); //instantiate new boulder
+
+		//establish the two way references
+		tileBoulder = newBoulder.GetComponent<BoulderController>();
+		tileBoulder.tileBoulderIsOn = this.gameObject.GetComponent<TileController>();
+
+		//boulder handles it's own destruction
+
 	}
 
 	public virtual void Update() {
 
+		//this is no longer used
 		if(tileName.Contains(boulder) && minedBoulder){ //this handles the self destruction of a boulder tile and creation of a tile to replace it
 			List<ElementContainer> temp = new List<ElementContainer> (); //buffer to copy the tile element contents into
 			temp = tileItems.buriedElements;
@@ -82,6 +110,12 @@ public class TileController : MonoBehaviour {
 
 			}
 		}
+
+		//if boulder is destroyed, check hasBoulder, I don't think the tile should have to do anything
+			//boulder unchecks hasBoulder
+			//boulder destroys itself
+			//boulder releases items
+			//boulder nulls reference
 	}
 
 	public void UpdateBoulderCount (int amount){
@@ -99,20 +133,11 @@ public class TileController : MonoBehaviour {
 	}
 
 	void OnDestroy(){
-		//this leaves things in the game scene and is not cleaned upon end
+		//this leaves things in the game scene and is not cleaned upon end, don't use
 	}
 
 	public virtual void OnCollisionEnter2D(Collision2D collision){
-		Debug.Log ("tile collision occurred");
-
-		//TODO this needs to be changed, mining a boulder will be more of a process than just running in to it
-		//checks if the player collided with a boulder tile and if so sets the mined boulder conidtion to true, which will destroy the boulder
-		if(tileName.Contains(boulder) && !minedBoulder && collision.gameObject.name.Contains("Player")){
-			//collision.gameObject.name.Equals("Player")
-
-			Debug.Log("tile collided with: " + collision.gameObject.name);
-			minedBoulder = true;
-		}
+		//nothing at the moment, used to handle boulder tile collsion
 	}
 
 	void OnMouseEnter(){
@@ -135,14 +160,12 @@ public class TileController : MonoBehaviour {
 		GameObject inGameItems = GameObject.FindWithTag ("All Game Items");
 		int i;
 		for(i = 0; i < elementFrequency; i++){
-			tileItems.AddElementContainerToTile (inGameItems.GetComponent<GameItems>().allGameItems.getRandomVolumeOfDispersedElement());
+			tileItems.AddElementContainerToTile (inGameItems.GetComponent<GameItems>().allGameItems.GetRandomVolumeOfDispersedElement());
 		}
-		Debug.Log ("Added " + i + " elements to the tile.");
 	}
 		
-	//Randomly chooses one of the ground tile prefabs to create
+	//Randomly chooses one of the ground tile prefabs to create, for when the boulder is destroyed, not needed anymore
 	void CreateRandomGroundTile(){
-		System.Random rand = new System.Random ();
 		int nextRandom = rand.Next (groundTilePrefabCount) + 1; //add one because rand.Next is from 0 to (x) exclusive
 		string toLoad = ground + nextRandom;
 		GameObject newTile = (GameObject)Instantiate (Resources.Load (prefabsPath + toLoad), 
@@ -153,12 +176,11 @@ public class TileController : MonoBehaviour {
 	//Does not duplicate items anymore
 	void ReleaseBoulderElements(List<ElementContainer> boulderContents, List<Vector2> spawnPoints){
 		int contentsCount = boulderContents.Count;
-		System.Random rand = new System.Random ();
 		List<Vector2> chosenPoints = tileItems.ItemDispersement (contentsCount, spawnPoints); //list of randomly chosen spawn points
 
 		foreach(ElementContainer ele in boulderContents){
 			string nameOfBoxPrefab = prefabsPath + ele.contents.name + "Box";
-			GameObject newBox = (GameObject)Instantiate(Resources.Load(nameOfBoxPrefab));
+			GameObject newBox = (GameObject)Instantiate(Resources.Load(nameOfBoxPrefab), transform.parent);
 			UpdateElementBoxCount (1);
 			Transform tilePos = gameObject.transform; //the position in coordinate space of the current tile
 
@@ -168,12 +190,22 @@ public class TileController : MonoBehaviour {
 
 			float newX = tilePos.position.x + newItemPos.x;
 			float newY = tilePos.position.y + newItemPos.y;
+
+			//if the element box prefab has a position entered it will be spawned in the wrong place
 			newBox.transform.Translate (new Vector3 (newX, newY, 0.0f)); //move the box to the item spawn point
-			newBox.transform.localScale = new Vector3(0.4f, 0.4f, 0.0f); //scale down the element boxes by a 4th
+			newBox.transform.localScale = new Vector3(0.3f, 0.3f, 0.0f); //scale down the element boxes by 0.3
 
 			newBox.GetComponent<ElementBox>().container = ele; //transfer tile single tile element container to new box
 
 		}
+	}
+
+	public void SetHasBoulder(){
+		hasBoulder = true;
+	}
+
+	public void UnsetHasBoulder(){
+		hasBoulder = false;
 	}
 
 }

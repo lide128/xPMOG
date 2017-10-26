@@ -196,7 +196,7 @@ public class Inventory {
 		return successfullyAdded;
 	}
 
-	//Adds and entire element container, all of it's volume, to the inventory
+	//Adds an entire element container, all of it's volume, to the inventory
 	public bool AddElementContainerToInventory(ElementContainer elementContainerToAdd){
 		bool successfullyAdded = false;
 		string toAddName = elementContainerToAdd.contents.name;

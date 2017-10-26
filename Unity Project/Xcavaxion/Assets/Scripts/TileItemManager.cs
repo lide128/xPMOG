@@ -23,29 +23,27 @@ public class TileItemManager {
 
 	public TileItemManager(){
 		buriedElements = new List<ElementContainer> ();
-		Debug.Log ("Created new TileItemManager");
 
 	}
 
 	public void AddItemToTile(string itemToAdd){
 		buriedItems.Add (itemToAdd);
-		Debug.Log ("Added " + itemToAdd + " to the list of buried items.");
 	}
 
 	//handles combining element containters, only want element containers of individual elements
-	public void AddElementContainerToTile(ElementContainer elementContainerToAdd){
+	//return element extraction difficulty?
+	public int AddElementContainerToTile(ElementContainer elementContainerToAdd){
 		string toAddName = elementContainerToAdd.contents.name;
 		if (CheckIfElementAlreadyContained (toAddName)) {
 			AddElementContentsTo (toAddName, elementContainerToAdd.volume);
 		} else {
 			buriedElements.Add (elementContainerToAdd);
 		}
-		Debug.Log ("Added element container of: " + elementContainerToAdd.contents.name + " to the list of buried elements");
+		return elementContainerToAdd.contents.extractionDifficulty;
 	}
 
 	public void AddCodeNuggetsToTile(string codeNuggetsToAdd){
 		buriedCodeNuggets.Add (codeNuggetsToAdd);
-		Debug.Log ("Added " + codeNuggetsToAdd + " to the list of buried code nuggets");
 	}
 
 	//checks if the element container is already present within the tile in order to avoid duplication
@@ -63,10 +61,7 @@ public class TileItemManager {
 	public void AddElementContentsTo(string elementName, int volumeToAdd){
 		foreach(ElementContainer cont in buriedElements){
 			if(elementName.Equals(cont.contents.name)){
-				Debug.Log ("original " + cont.contents.name + " volume: " + cont.volume);
-				Debug.Log ("volume of " + elementName + " to add: " + volumeToAdd);
 				cont.volume += volumeToAdd; //add the amount to preexisting element container
-				Debug.Log ("volume after combining: " + cont.volume);
 			}
 		}
 	}
@@ -103,7 +98,6 @@ public class TileItemManager {
 		return tileItemSpawnPoints [rand.Next (pointCount)];
 	}
 
-	//TODO fix so this doesn't duplicate points
 	//returns a list of spawn points of specified size from the list of spawn points, does not duplicate points
 	//passing in spawn points in case I want to keep a list of availble points at a higher level
 	public List<Vector2> ItemDispersement(int numberOfPoints, List<Vector2> spawnPoints){

@@ -67,10 +67,12 @@
      <Compile Include="Assets\Scripts\ActionMessage.cs" />
      <Compile Include="Assets\Scripts\AIController.cs" />
      <Compile Include="Assets\Scripts\BaseController.cs" />
+     <Compile Include="Assets\Scripts\BoulderController.cs" />
      <Compile Include="Assets\Scripts\CameraController.cs" />
      <Compile Include="Assets\Scripts\ElementBox.cs" />
      <Compile Include="Assets\Scripts\ElementContainer.cs" />
      <Compile Include="Assets\Scripts\Elements.cs" />
+     <Compile Include="Assets\Scripts\FloatingAlertMessage.cs" />
      <Compile Include="Assets\Scripts\GameController.cs" />
      <Compile Include="Assets\Scripts\GameItemManager.cs" />
      <Compile Include="Assets\Scripts\GameItems.cs" />
